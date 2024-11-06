@@ -7,15 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C371B85B2CDABACA00890F02 /* MongoKitten in Frameworks */ = {isa = PBXBuildFile; productRef = C371B85A2CDABACA00890F02 /* MongoKitten */; };
+		C371B8602CDABB0000890F02 /* MongoTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C371B85F2CDABB0000890F02 /* MongoTest.swift */; };
+		C371B8632CDAC64700890F02 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = C371B8622CDAC64700890F02 /* User.swift */; };
 		C3A53E362CD8676900D105EC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A53E352CD8676900D105EC /* AppDelegate.swift */; };
 		C3A53E382CD8676900D105EC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A53E372CD8676900D105EC /* SceneDelegate.swift */; };
 		C3A53E3A2CD8676900D105EC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A53E392CD8676900D105EC /* ViewController.swift */; };
 		C3A53E3D2CD8676900D105EC /* Base in Resources */ = {isa = PBXBuildFile; fileRef = C3A53E3C2CD8676900D105EC /* Base */; };
 		C3A53E3F2CD8676A00D105EC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3A53E3E2CD8676A00D105EC /* Assets.xcassets */; };
 		C3A53E422CD8676A00D105EC /* Base in Resources */ = {isa = PBXBuildFile; fileRef = C3A53E412CD8676A00D105EC /* Base */; };
+		C3FC87552CDB0CFB00AA4C16 /* MongoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = C3FC87542CDB0CFB00AA4C16 /* MongoSwift */; };
+		C3FC87572CDB0CFB00AA4C16 /* MongoSwiftSync in Frameworks */ = {isa = PBXBuildFile; productRef = C3FC87562CDB0CFB00AA4C16 /* MongoSwiftSync */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C371B85F2CDABB0000890F02 /* MongoTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MongoTest.swift; sourceTree = "<group>"; };
+		C371B8622CDAC64700890F02 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		C3A53E322CD8676900D105EC /* workkie.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = workkie.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3A53E352CD8676900D105EC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C3A53E372CD8676900D105EC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -31,12 +38,31 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C371B85B2CDABACA00890F02 /* MongoKitten in Frameworks */,
+				C3FC87552CDB0CFB00AA4C16 /* MongoSwift in Frameworks */,
+				C3FC87572CDB0CFB00AA4C16 /* MongoSwiftSync in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C371B85C2CDABAD400890F02 /* database */ = {
+			isa = PBXGroup;
+			children = (
+				C371B85F2CDABB0000890F02 /* MongoTest.swift */,
+			);
+			path = database;
+			sourceTree = "<group>";
+		};
+		C371B8612CDAC64000890F02 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				C371B8622CDAC64700890F02 /* User.swift */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
 		C3A53E292CD8676900D105EC = {
 			isa = PBXGroup;
 			children = (
@@ -56,6 +82,8 @@
 		C3A53E342CD8676900D105EC /* workkie */ = {
 			isa = PBXGroup;
 			children = (
+				C371B8612CDAC64000890F02 /* model */,
+				C371B85C2CDABAD400890F02 /* database */,
 				C3A53E352CD8676900D105EC /* AppDelegate.swift */,
 				C3A53E372CD8676900D105EC /* SceneDelegate.swift */,
 				C3A53E392CD8676900D105EC /* ViewController.swift */,
@@ -83,6 +111,11 @@
 			dependencies = (
 			);
 			name = workkie;
+			packageProductDependencies = (
+				C371B85A2CDABACA00890F02 /* MongoKitten */,
+				C3FC87542CDB0CFB00AA4C16 /* MongoSwift */,
+				C3FC87562CDB0CFB00AA4C16 /* MongoSwiftSync */,
+			);
 			productName = workkie;
 			productReference = C3A53E322CD8676900D105EC /* workkie.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +144,10 @@
 				Base,
 			);
 			mainGroup = C3A53E292CD8676900D105EC;
+			packageReferences = (
+				C371B8592CDABACA00890F02 /* XCRemoteSwiftPackageReference "MongoKitten" */,
+				C3FC87532CDB0CFB00AA4C16 /* XCRemoteSwiftPackageReference "mongo-swift-driver" */,
+			);
 			productRefGroup = C3A53E332CD8676900D105EC /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -140,6 +177,8 @@
 			files = (
 				C3A53E3A2CD8676900D105EC /* ViewController.swift in Sources */,
 				C3A53E362CD8676900D105EC /* AppDelegate.swift in Sources */,
+				C371B8602CDABB0000890F02 /* MongoTest.swift in Sources */,
+				C371B8632CDAC64700890F02 /* User.swift in Sources */,
 				C3A53E382CD8676900D105EC /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -363,6 +402,43 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		C371B8592CDABACA00890F02 /* XCRemoteSwiftPackageReference "MongoKitten" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/orlandos-nl/MongoKitten.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.9.5;
+			};
+		};
+		C3FC87532CDB0CFB00AA4C16 /* XCRemoteSwiftPackageReference "mongo-swift-driver" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mongodb/mongo-swift-driver.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		C371B85A2CDABACA00890F02 /* MongoKitten */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C371B8592CDABACA00890F02 /* XCRemoteSwiftPackageReference "MongoKitten" */;
+			productName = MongoKitten;
+		};
+		C3FC87542CDB0CFB00AA4C16 /* MongoSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C3FC87532CDB0CFB00AA4C16 /* XCRemoteSwiftPackageReference "mongo-swift-driver" */;
+			productName = MongoSwift;
+		};
+		C3FC87562CDB0CFB00AA4C16 /* MongoSwiftSync */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C3FC87532CDB0CFB00AA4C16 /* XCRemoteSwiftPackageReference "mongo-swift-driver" */;
+			productName = MongoSwiftSync;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = C3A53E2A2CD8676900D105EC /* Project object */;
 }
