@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C371B85B2CDABACA00890F02 /* MongoKitten in Frameworks */ = {isa = PBXBuildFile; productRef = C371B85A2CDABACA00890F02 /* MongoKitten */; };
 		C371B8602CDABB0000890F02 /* MongoTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C371B85F2CDABB0000890F02 /* MongoTest.swift */; };
 		C371B8632CDAC64700890F02 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = C371B8622CDAC64700890F02 /* User.swift */; };
 		C3A53E362CD8676900D105EC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A53E352CD8676900D105EC /* AppDelegate.swift */; };
@@ -16,8 +15,11 @@
 		C3A53E3D2CD8676900D105EC /* Base in Resources */ = {isa = PBXBuildFile; fileRef = C3A53E3C2CD8676900D105EC /* Base */; };
 		C3A53E3F2CD8676A00D105EC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3A53E3E2CD8676A00D105EC /* Assets.xcassets */; };
 		C3A53E422CD8676A00D105EC /* Base in Resources */ = {isa = PBXBuildFile; fileRef = C3A53E412CD8676A00D105EC /* Base */; };
-		C3FC87552CDB0CFB00AA4C16 /* MongoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = C3FC87542CDB0CFB00AA4C16 /* MongoSwift */; };
-		C3FC87572CDB0CFB00AA4C16 /* MongoSwiftSync in Frameworks */ = {isa = PBXBuildFile; productRef = C3FC87562CDB0CFB00AA4C16 /* MongoSwiftSync */; };
+		C3FC87612CDB10C100AA4C16 /* Meow in Frameworks */ = {isa = PBXBuildFile; productRef = C3FC87602CDB10C100AA4C16 /* Meow */; };
+		C3FC87632CDB10C100AA4C16 /* MongoClient in Frameworks */ = {isa = PBXBuildFile; productRef = C3FC87622CDB10C100AA4C16 /* MongoClient */; };
+		C3FC87652CDB10C100AA4C16 /* MongoCore in Frameworks */ = {isa = PBXBuildFile; productRef = C3FC87642CDB10C100AA4C16 /* MongoCore */; };
+		C3FC87672CDB10C100AA4C16 /* MongoKitten in Frameworks */ = {isa = PBXBuildFile; productRef = C3FC87662CDB10C100AA4C16 /* MongoKitten */; };
+		C3FC87692CDB132B00AA4C16 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C3FC87682CDB132B00AA4C16 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +33,7 @@
 		C3A53E3E2CD8676A00D105EC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C3A53E412CD8676A00D105EC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C3A53E432CD8676A00D105EC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C3FC87682CDB132B00AA4C16 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,9 +41,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C371B85B2CDABACA00890F02 /* MongoKitten in Frameworks */,
-				C3FC87552CDB0CFB00AA4C16 /* MongoSwift in Frameworks */,
-				C3FC87572CDB0CFB00AA4C16 /* MongoSwiftSync in Frameworks */,
+				C3FC87652CDB10C100AA4C16 /* MongoCore in Frameworks */,
+				C3FC87632CDB10C100AA4C16 /* MongoClient in Frameworks */,
+				C3FC87672CDB10C100AA4C16 /* MongoKitten in Frameworks */,
+				C3FC87612CDB10C100AA4C16 /* Meow in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,6 +92,7 @@
 				C3A53E372CD8676900D105EC /* SceneDelegate.swift */,
 				C3A53E392CD8676900D105EC /* ViewController.swift */,
 				C3A53E3B2CD8676900D105EC /* Main.storyboard */,
+				C3FC87682CDB132B00AA4C16 /* GoogleService-Info.plist */,
 				C3A53E3E2CD8676A00D105EC /* Assets.xcassets */,
 				C3A53E402CD8676A00D105EC /* LaunchScreen.storyboard */,
 				C3A53E432CD8676A00D105EC /* Info.plist */,
@@ -112,9 +117,10 @@
 			);
 			name = workkie;
 			packageProductDependencies = (
-				C371B85A2CDABACA00890F02 /* MongoKitten */,
-				C3FC87542CDB0CFB00AA4C16 /* MongoSwift */,
-				C3FC87562CDB0CFB00AA4C16 /* MongoSwiftSync */,
+				C3FC87602CDB10C100AA4C16 /* Meow */,
+				C3FC87622CDB10C100AA4C16 /* MongoClient */,
+				C3FC87642CDB10C100AA4C16 /* MongoCore */,
+				C3FC87662CDB10C100AA4C16 /* MongoKitten */,
 			);
 			productName = workkie;
 			productReference = C3A53E322CD8676900D105EC /* workkie.app */;
@@ -145,8 +151,7 @@
 			);
 			mainGroup = C3A53E292CD8676900D105EC;
 			packageReferences = (
-				C371B8592CDABACA00890F02 /* XCRemoteSwiftPackageReference "MongoKitten" */,
-				C3FC87532CDB0CFB00AA4C16 /* XCRemoteSwiftPackageReference "mongo-swift-driver" */,
+				C3FC875F2CDB10C100AA4C16 /* XCRemoteSwiftPackageReference "MongoKitten" */,
 			);
 			productRefGroup = C3A53E332CD8676900D105EC /* Products */;
 			projectDirPath = "";
@@ -163,6 +168,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C3A53E3F2CD8676A00D105EC /* Assets.xcassets in Resources */,
+				C3FC87692CDB132B00AA4C16 /* GoogleService-Info.plist in Resources */,
 				C3A53E422CD8676A00D105EC /* Base in Resources */,
 				C3A53E3D2CD8676900D105EC /* Base in Resources */,
 			);
@@ -257,7 +263,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -314,7 +320,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -334,11 +340,14 @@
 				DEVELOPMENT_TEAM = D3U2YKYBAK;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = workkie/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Workkie;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -362,11 +371,14 @@
 				DEVELOPMENT_TEAM = D3U2YKYBAK;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = workkie/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Workkie;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -404,7 +416,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		C371B8592CDABACA00890F02 /* XCRemoteSwiftPackageReference "MongoKitten" */ = {
+		C3FC875F2CDB10C100AA4C16 /* XCRemoteSwiftPackageReference "MongoKitten" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/orlandos-nl/MongoKitten.git";
 			requirement = {
@@ -412,31 +424,28 @@
 				minimumVersion = 7.9.5;
 			};
 		};
-		C3FC87532CDB0CFB00AA4C16 /* XCRemoteSwiftPackageReference "mongo-swift-driver" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/mongodb/mongo-swift-driver.git";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		C371B85A2CDABACA00890F02 /* MongoKitten */ = {
+		C3FC87602CDB10C100AA4C16 /* Meow */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C371B8592CDABACA00890F02 /* XCRemoteSwiftPackageReference "MongoKitten" */;
+			package = C3FC875F2CDB10C100AA4C16 /* XCRemoteSwiftPackageReference "MongoKitten" */;
+			productName = Meow;
+		};
+		C3FC87622CDB10C100AA4C16 /* MongoClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C3FC875F2CDB10C100AA4C16 /* XCRemoteSwiftPackageReference "MongoKitten" */;
+			productName = MongoClient;
+		};
+		C3FC87642CDB10C100AA4C16 /* MongoCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C3FC875F2CDB10C100AA4C16 /* XCRemoteSwiftPackageReference "MongoKitten" */;
+			productName = MongoCore;
+		};
+		C3FC87662CDB10C100AA4C16 /* MongoKitten */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C3FC875F2CDB10C100AA4C16 /* XCRemoteSwiftPackageReference "MongoKitten" */;
 			productName = MongoKitten;
-		};
-		C3FC87542CDB0CFB00AA4C16 /* MongoSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C3FC87532CDB0CFB00AA4C16 /* XCRemoteSwiftPackageReference "mongo-swift-driver" */;
-			productName = MongoSwift;
-		};
-		C3FC87562CDB0CFB00AA4C16 /* MongoSwiftSync */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C3FC87532CDB0CFB00AA4C16 /* XCRemoteSwiftPackageReference "mongo-swift-driver" */;
-			productName = MongoSwiftSync;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
