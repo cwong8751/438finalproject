@@ -15,6 +15,7 @@ class MongoTest {
     // establish connection
     func connect(uri: String) async throws -> MongoDatabase {
         database = try await MongoDatabase.connect(to: uri)
+        print("database is connected")
         return database!
     }
     
@@ -136,5 +137,122 @@ class MongoTest {
             return false
         }
     }
+    
+    // function to get all posts
+    func getAllPosts() async throws -> [Post]? {
+        guard let database = database else {
+            print("Database is not connected.")
+            return nil
+        }
+        
+        let collection = database["posts"]
+        
+        do {
+            // get all post cursor
+            let postsCursor = try await collection.find()
+            
+            var posts: [Post] = []
+            let decoder = BSONDecoder()
+            
+            // go over every post
+            for try await document in postsCursor {
+                // decode to post interface
+                if let post = try? decoder.decode(Post.self, from: document) {
+                    posts.append(post)
+                } else {
+                    print("Failed to decode document: \(document)")
+                }
+            }
+            
+            // debug
+            print("Retrieved Posts:")
+            for post in posts {
+                print("Post _id: \(post._id) Post author: \(post.author) Post title: \(post.title) Post content: \(post.content) Post date: \(post.date)")
+            }
+            
+            return posts
+        } catch {
+            print("Failed to retrieve posts: \(error)")
+            return nil
+        }
+    }
+    
+    // function to get specific post
+    func getPost(id: ObjectId) async throws -> Post? {
+        guard let database = database else {
+            print("Database is not connected.")
+            return nil
+        }
+        
+        print("id need to find: \(id)")
+        
+        let collection = database["posts"]
+        
+        do {
+            if let postDoc = try await collection.findOne(["_id": id]) {
+                let decoder = BSONDecoder()
+                let gotPost = try decoder.decode(Post.self, from: postDoc)
+                
+                // debug
+                print("got post with id \(gotPost._id) title: \(gotPost.title) author: \(gotPost.author) content: \(gotPost.content) date: \(gotPost.date)")
+                
+                // return result
+                return gotPost
+            }
+            else{
+                print("post with id \(id) not found")
+                return nil
+            }
+        }
+        catch {
+            print("find post with id \(id) failed. \(error)")
+            return nil
+        }
+    }
+    
+    // function to insert post
+    func insertPost(post: Post) async throws -> Bool {
+        guard let database = database else {
+            print("Database is not connected.")
+            return false
+        }
+        
+        let collection = database["posts"]
+        let insPost: Document  = ["author": post.author, "content": post.content, "date": post.date, "title": post.title, "comments": post.comments] // make document of new post
+        
+        do{
+            print("inserting post")
+            try await collection.insert(insPost)
+            print("insert post of author: \(post.author) title: \(post.title) ok")
+            return true
+        }
+        catch{
+            print("failed to insert post: \(error)")
+            return false
+        }
+    }
+    
+    // function to delete post
+    func deletePost(postId: ObjectId) async throws -> Bool {
+        guard let database = database else {
+            print("Database is not connected.")
+            return false
+        }
+        
+        let collection = database["posts"]
+        
+        do {
+            let deleteResult = try await collection.deleteOne(where: "_id" == postId) // delete post on condition
+            //TODO: if item doesn't exist it will still say ok, but has been removed already
+            print("Delete post \(postId) ok")
+            return true
+        } catch {
+            print("Delete post \(postId) fail")
+            return false
+        }
+    }
+    
+    // function to edit post
+    //TODO: 
 }
 

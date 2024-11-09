@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C35C876F2CE008C6002AA2C1 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35C876E2CE008C6002AA2C1 /* Post.swift */; };
 		C371B8602CDABB0000890F02 /* MongoTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C371B85F2CDABB0000890F02 /* MongoTest.swift */; };
 		C371B8632CDAC64700890F02 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = C371B8622CDAC64700890F02 /* User.swift */; };
 		C3A53E362CD8676900D105EC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A53E352CD8676900D105EC /* AppDelegate.swift */; };
@@ -23,6 +24,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C35C876E2CE008C6002AA2C1 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		C35C87702CE028E5002AA2C1 /* tutorial.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = tutorial.md; sourceTree = "<group>"; };
 		C371B85F2CDABB0000890F02 /* MongoTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MongoTest.swift; sourceTree = "<group>"; };
 		C371B8622CDAC64700890F02 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		C3A53E322CD8676900D105EC /* workkie.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = workkie.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -55,6 +58,7 @@
 			isa = PBXGroup;
 			children = (
 				C371B85F2CDABB0000890F02 /* MongoTest.swift */,
+				C35C87702CE028E5002AA2C1 /* tutorial.md */,
 			);
 			path = database;
 			sourceTree = "<group>";
@@ -63,6 +67,7 @@
 			isa = PBXGroup;
 			children = (
 				C371B8622CDAC64700890F02 /* User.swift */,
+				C35C876E2CE008C6002AA2C1 /* Post.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -184,6 +189,7 @@
 				C3A53E3A2CD8676900D105EC /* ViewController.swift in Sources */,
 				C3A53E362CD8676900D105EC /* AppDelegate.swift in Sources */,
 				C371B8602CDABB0000890F02 /* MongoTest.swift in Sources */,
+				C35C876F2CE008C6002AA2C1 /* Post.swift in Sources */,
 				C371B8632CDAC64700890F02 /* User.swift in Sources */,
 				C3A53E382CD8676900D105EC /* SceneDelegate.swift in Sources */,
 			);
