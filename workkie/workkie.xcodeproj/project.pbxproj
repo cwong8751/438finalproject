@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7A0BB43E2CE0673E00275E24 /* ConnectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0BB43D2CE0673E00275E24 /* ConnectViewController.swift */; };
+		7A0BB4402CE0740500275E24 /* ProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0BB43F2CE0740500275E24 /* ProfileCell.swift */; };
 		C35C876F2CE008C6002AA2C1 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35C876E2CE008C6002AA2C1 /* Post.swift */; };
 		C371B8602CDABB0000890F02 /* MongoTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C371B85F2CDABB0000890F02 /* MongoTest.swift */; };
 		C371B8632CDAC64700890F02 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = C371B8622CDAC64700890F02 /* User.swift */; };
@@ -24,6 +26,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7A0BB43D2CE0673E00275E24 /* ConnectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectViewController.swift; sourceTree = "<group>"; };
+		7A0BB43F2CE0740500275E24 /* ProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCell.swift; sourceTree = "<group>"; };
 		C35C876E2CE008C6002AA2C1 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		C35C87702CE028E5002AA2C1 /* tutorial.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = tutorial.md; sourceTree = "<group>"; };
 		C371B85F2CDABB0000890F02 /* MongoTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MongoTest.swift; sourceTree = "<group>"; };
@@ -54,6 +58,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7A0BB4412CE0741D00275E24 /* connectVC */ = {
+			isa = PBXGroup;
+			children = (
+				7A0BB43D2CE0673E00275E24 /* ConnectViewController.swift */,
+				7A0BB43F2CE0740500275E24 /* ProfileCell.swift */,
+			);
+			path = connectVC;
+			sourceTree = "<group>";
+		};
 		C371B85C2CDABAD400890F02 /* database */ = {
 			isa = PBXGroup;
 			children = (
@@ -91,6 +104,7 @@
 		C3A53E342CD8676900D105EC /* workkie */ = {
 			isa = PBXGroup;
 			children = (
+				7A0BB4412CE0741D00275E24 /* connectVC */,
 				C371B8612CDAC64000890F02 /* model */,
 				C371B85C2CDABAD400890F02 /* database */,
 				C3A53E352CD8676900D105EC /* AppDelegate.swift */,
@@ -186,10 +200,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A0BB43E2CE0673E00275E24 /* ConnectViewController.swift in Sources */,
 				C3A53E3A2CD8676900D105EC /* ViewController.swift in Sources */,
 				C3A53E362CD8676900D105EC /* AppDelegate.swift in Sources */,
 				C371B8602CDABB0000890F02 /* MongoTest.swift in Sources */,
 				C35C876F2CE008C6002AA2C1 /* Post.swift in Sources */,
+				7A0BB4402CE0740500275E24 /* ProfileCell.swift in Sources */,
 				C371B8632CDAC64700890F02 /* User.swift in Sources */,
 				C3A53E382CD8676900D105EC /* SceneDelegate.swift in Sources */,
 			);
