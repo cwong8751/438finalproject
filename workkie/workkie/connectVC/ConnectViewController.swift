@@ -29,7 +29,8 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
         // connect to MongoDB
         Task {
             do {
-                let db = try await mongoTest.connect(uri: "your-mongodb-connection-string")
+                let db = try await mongoTest.connect(uri: "mongodb+srv://chengli:Luncy1234567890@users.at6lb.mongodb.net/users?authSource=admin&appName=Users")
+
                 print("Connected to MongoDB successfully!")
                 
                 // load data after connection
