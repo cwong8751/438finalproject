@@ -9,11 +9,15 @@ import UIKit
 
 class CustomTableViewCell: UITableViewCell {
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
+    
+    @IBOutlet weak var postAuthor: UILabel!
+    
+    @IBOutlet weak var postDate: UILabel!
+    
+    @IBOutlet weak var postTitle: UILabel!
+    
+    @IBOutlet weak var postContent: UILabel!
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 

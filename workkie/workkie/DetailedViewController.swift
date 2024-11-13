@@ -9,26 +9,30 @@ import UIKit
 
 class DetailedViewController: UIViewController {
     
-    var image: UIImage?
-    var imageName: String!
+    var author: String!
+    var postTitle: String!
+    var content: String!
+    var date: String!
 
+    @IBOutlet weak var authorvc: UILabel!
+    
+    @IBOutlet weak var titlevc: UILabel!
+    
+    @IBOutlet weak var datevc: UILabel!
+    
+    @IBOutlet weak var contentvc: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        let theImageFrame = CGRect(x: view.frame.midX - (image?.size.width ?? 0)/2, y: 120, width: image?.size.width ?? 0, height: image?.size.height ?? 0)
+        view.backgroundColor = UIColor.white
         
-        let imageView = UIImageView(frame: theImageFrame)
-        imageView.image = image
+        authorvc?.text = author
+        titlevc?.text = postTitle
+        datevc?.text = date
+        contentvc?.text = content
         
-        view.addSubview(imageView)
-        
-        let theTextFrame = CGRect(x: 0, y: image?.size.height ?? 0 + 120, width: view.frame.width, height: 30)
-        
-        let textView = UILabel(frame: theTextFrame)
-        textView.text = imageName
-        textView.textAlignment = .center
-        view.addSubview(textView)
     }
     
 
