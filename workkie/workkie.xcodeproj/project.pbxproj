@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		7F5062BF2CE1273400E529F8 /* DetailedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F5062BE2CE1273400E529F8 /* DetailedViewController.swift */; };
+
+		007E6C872CDC2B6B005848ED /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007E6C862CDC2B6B005848ED /* ProfileViewController.swift */; };
+		00F4E2F22CE0091B0069C29E /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F4E2F12CE0091B0069C29E /* LoginViewController.swift */; };
+		00F4E2F42CE009380069C29E /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F4E2F32CE009380069C29E /* RegisterViewController.swift */; };
 		C35C876F2CE008C6002AA2C1 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35C876E2CE008C6002AA2C1 /* Post.swift */; };
 		C371B8602CDABB0000890F02 /* MongoTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C371B85F2CDABB0000890F02 /* MongoTest.swift */; };
 		C371B8632CDAC64700890F02 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = C371B8622CDAC64700890F02 /* User.swift */; };
@@ -26,6 +30,9 @@
 
 /* Begin PBXFileReference section */
 		7F5062BE2CE1273400E529F8 /* DetailedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedViewController.swift; sourceTree = "<group>"; };
+		007E6C862CDC2B6B005848ED /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		00F4E2F12CE0091B0069C29E /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		00F4E2F32CE009380069C29E /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		C35C876E2CE008C6002AA2C1 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		C35C87702CE028E5002AA2C1 /* tutorial.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = tutorial.md; sourceTree = "<group>"; };
 		C371B85F2CDABB0000890F02 /* MongoTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MongoTest.swift; sourceTree = "<group>"; };
@@ -99,6 +106,9 @@
 				C3A53E372CD8676900D105EC /* SceneDelegate.swift */,
 				C3A53E392CD8676900D105EC /* ViewController.swift */,
 				7F5062BE2CE1273400E529F8 /* DetailedViewController.swift */,
+				007E6C862CDC2B6B005848ED /* ProfileViewController.swift */,
+				00F4E2F12CE0091B0069C29E /* LoginViewController.swift */,
+				00F4E2F32CE009380069C29E /* RegisterViewController.swift */,
 				C3A53E3B2CD8676900D105EC /* Main.storyboard */,
 				C3FC87682CDB132B00AA4C16 /* GoogleService-Info.plist */,
 				C3A53E3E2CD8676A00D105EC /* Assets.xcassets */,
@@ -190,11 +200,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				7F5062BF2CE1273400E529F8 /* DetailedViewController.swift in Sources */,
+				00F4E2F22CE0091B0069C29E /* LoginViewController.swift in Sources */,
 				C3A53E3A2CD8676900D105EC /* ViewController.swift in Sources */,
+				007E6C872CDC2B6B005848ED /* ProfileViewController.swift in Sources */,
 				C3A53E362CD8676900D105EC /* AppDelegate.swift in Sources */,
 				C371B8602CDABB0000890F02 /* MongoTest.swift in Sources */,
 				C35C876F2CE008C6002AA2C1 /* Post.swift in Sources */,
 				C371B8632CDAC64700890F02 /* User.swift in Sources */,
+				00F4E2F42CE009380069C29E /* RegisterViewController.swift in Sources */,
 				C3A53E382CD8676900D105EC /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
