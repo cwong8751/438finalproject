@@ -100,36 +100,36 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="1cw-oC-hH0">
+                                <rect key="frame" x="0.0" y="369" width="393" height="400"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </tableView>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1fr-dn-Dyj">
+                                <rect key="frame" x="0.0" y="115" width="393" height="255"/>
+                                <standardMapConfiguration key="preferredConfiguration"/>
+                            </mapView>
                             <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="ngl-ky-Det">
-                                <rect key="frame" x="0.0" y="104" width="393" height="56"/>
+                                <rect key="frame" x="0.0" y="59" width="393" height="56"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="9sD-1e-0Zh"/>
                                 </connections>
                             </searchBar>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="1cw-oC-hH0">
-                                <rect key="frame" x="0.0" y="371" width="393" height="370"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                            </tableView>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1fr-dn-Dyj">
-                                <rect key="frame" x="16" y="160" width="361" height="126"/>
-                                <standardMapConfiguration key="preferredConfiguration"/>
-                            </mapView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="1fr-dn-Dyj" firstAttribute="top" secondItem="ngl-ky-Det" secondAttribute="bottom" id="0QJ-DG-cVS"/>
                             <constraint firstItem="1cw-oC-hH0" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Ece-NA-KpJ"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="1fr-dn-Dyj" secondAttribute="trailing" constant="16" id="FUE-tC-o8L"/>
-                            <constraint firstItem="1fr-dn-Dyj" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="KQR-NT-kUF"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="1fr-dn-Dyj" secondAttribute="trailing" id="FUE-tC-o8L"/>
+                            <constraint firstItem="1fr-dn-Dyj" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="KQR-NT-kUF"/>
                             <constraint firstItem="1cw-oC-hH0" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="OO5-FF-jMc"/>
-                            <constraint firstItem="1cw-oC-hH0" firstAttribute="top" secondItem="ngl-ky-Det" secondAttribute="bottom" constant="211" id="Obs-wM-Jyb"/>
-                            <constraint firstItem="ngl-ky-Det" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="45" id="QHx-Cw-J9H"/>
+                            <constraint firstItem="1cw-oC-hH0" firstAttribute="top" secondItem="ngl-ky-Det" secondAttribute="bottom" constant="254" id="Obs-wM-Jyb"/>
+                            <constraint firstItem="ngl-ky-Det" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="QHx-Cw-J9H"/>
                             <constraint firstItem="ngl-ky-Det" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="SJl-X6-8Rh"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="1fr-dn-Dyj" secondAttribute="bottom" constant="483" id="Uyr-49-SYV"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="1fr-dn-Dyj" secondAttribute="bottom" constant="399" id="Uyr-49-SYV"/>
                             <constraint firstItem="ngl-ky-Det" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="YtO-bU-VyT"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="1cw-oC-hH0" secondAttribute="bottom" constant="28" id="ent-jQ-fop"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="1cw-oC-hH0" secondAttribute="bottom" id="ent-jQ-fop"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Connect" id="HNq-Q3-hyg">
@@ -143,7 +143,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="550" y="19"/>
+            <point key="canvasLocation" x="548.85496183206101" y="18.30985915492958"/>
         </scene>
         <!--People-->
         <scene sceneID="peopleSceneID">
