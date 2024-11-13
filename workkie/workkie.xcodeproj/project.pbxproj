@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7A0BB43E2CE0673E00275E24 /* ConnectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0BB43D2CE0673E00275E24 /* ConnectViewController.swift */; };
+		7ADCAD522CE324610065ACB0 /* ProfileCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7ADCAD512CE324610065ACB0 /* ProfileCell.xib */; };
+		7ADCAD532CE324610065ACB0 /* ProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ADCAD502CE324610065ACB0 /* ProfileCell.swift */; };
 
 		007E6C872CDC2B6B005848ED /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007E6C862CDC2B6B005848ED /* ProfileViewController.swift */; };
 		00F4E2F22CE0091B0069C29E /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F4E2F12CE0091B0069C29E /* LoginViewController.swift */; };
@@ -28,6 +31,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7A0BB43D2CE0673E00275E24 /* ConnectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectViewController.swift; sourceTree = "<group>"; };
+		7ADCAD502CE324610065ACB0 /* ProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCell.swift; sourceTree = "<group>"; };
+		7ADCAD512CE324610065ACB0 /* ProfileCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileCell.xib; sourceTree = "<group>"; };
 		007E6C862CDC2B6B005848ED /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		00F4E2F12CE0091B0069C29E /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		00F4E2F32CE009380069C29E /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
@@ -61,6 +67,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7A0BB4412CE0741D00275E24 /* connectVC */ = {
+			isa = PBXGroup;
+			children = (
+				7A0BB43D2CE0673E00275E24 /* ConnectViewController.swift */,
+				7ADCAD512CE324610065ACB0 /* ProfileCell.xib */,
+				7ADCAD502CE324610065ACB0 /* ProfileCell.swift */,
+			);
+			path = connectVC;
+			sourceTree = "<group>";
+		};
 		C371B85C2CDABAD400890F02 /* database */ = {
 			isa = PBXGroup;
 			children = (
@@ -98,6 +114,7 @@
 		C3A53E342CD8676900D105EC /* workkie */ = {
 			isa = PBXGroup;
 			children = (
+				7A0BB4412CE0741D00275E24 /* connectVC */,
 				C371B8612CDAC64000890F02 /* model */,
 				C371B85C2CDABAD400890F02 /* database */,
 				C3A53E352CD8676900D105EC /* AppDelegate.swift */,
@@ -186,6 +203,7 @@
 				C3FC87692CDB132B00AA4C16 /* GoogleService-Info.plist in Resources */,
 				C3A53E422CD8676A00D105EC /* Base in Resources */,
 				C3A53E3D2CD8676900D105EC /* Base in Resources */,
+				7ADCAD522CE324610065ACB0 /* ProfileCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -196,12 +214,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A0BB43E2CE0673E00275E24 /* ConnectViewController.swift in Sources */,
 				00F4E2F22CE0091B0069C29E /* LoginViewController.swift in Sources */,
 				C3A53E3A2CD8676900D105EC /* ViewController.swift in Sources */,
 				007E6C872CDC2B6B005848ED /* ProfileViewController.swift in Sources */,
 				C3A53E362CD8676900D105EC /* AppDelegate.swift in Sources */,
 				C371B8602CDABB0000890F02 /* MongoTest.swift in Sources */,
 				C35C876F2CE008C6002AA2C1 /* Post.swift in Sources */,
+				7ADCAD532CE324610065ACB0 /* ProfileCell.swift in Sources */,
 				C371B8632CDAC64700890F02 /* User.swift in Sources */,
 				00F4E2F42CE009380069C29E /* RegisterViewController.swift in Sources */,
 				C3A53E382CD8676900D105EC /* SceneDelegate.swift in Sources */,

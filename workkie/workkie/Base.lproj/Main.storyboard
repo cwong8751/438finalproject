@@ -1,15 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="jgD-A6-GP3">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="Map view configurations" minToolsVersion="14.0"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Connect View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ConnectViewController" customModule="workkie" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="ngl-ky-Det">
+                                <rect key="frame" x="0.0" y="104" width="393" height="56"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="9sD-1e-0Zh"/>
+                                </connections>
+                            </searchBar>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="1cw-oC-hH0">
+                                <rect key="frame" x="0.0" y="371" width="393" height="419"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </tableView>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1fr-dn-Dyj">
+                                <rect key="frame" x="16" y="160" width="361" height="175"/>
+                                <standardMapConfiguration key="preferredConfiguration"/>
+                            </mapView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="1fr-dn-Dyj" firstAttribute="top" secondItem="ngl-ky-Det" secondAttribute="bottom" id="0QJ-DG-cVS"/>
+                            <constraint firstItem="1cw-oC-hH0" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Ece-NA-KpJ"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="1fr-dn-Dyj" secondAttribute="trailing" constant="16" id="FUE-tC-o8L"/>
+                            <constraint firstItem="1fr-dn-Dyj" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="KQR-NT-kUF"/>
+                            <constraint firstItem="1cw-oC-hH0" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="OO5-FF-jMc"/>
+                            <constraint firstItem="1cw-oC-hH0" firstAttribute="top" secondItem="ngl-ky-Det" secondAttribute="bottom" constant="211" id="Obs-wM-Jyb"/>
+                            <constraint firstItem="ngl-ky-Det" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="45" id="QHx-Cw-J9H"/>
+                            <constraint firstItem="ngl-ky-Det" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="SJl-X6-8Rh"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="1fr-dn-Dyj" secondAttribute="bottom" constant="483" id="Uyr-49-SYV"/>
+                            <constraint firstItem="ngl-ky-Det" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="YtO-bU-VyT"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="1cw-oC-hH0" secondAttribute="bottom" constant="28" id="ent-jQ-fop"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="searchBar" destination="ngl-ky-Det" id="cSo-p7-WJA"/>
+                        <outlet property="tableView" destination="1cw-oC-hH0" id="2P3-Pw-PTR"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="129.00763358778624" y="-2.1126760563380285"/>
+        </scene>
+    </scenes>
+    <resources>
         <!--People-->
         <scene sceneID="tne-QT-ifu">
             <objects>
