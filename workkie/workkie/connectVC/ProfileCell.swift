@@ -55,13 +55,14 @@ class ProfileCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        
+        // I see no use in this, you can set this all in the interface builder.
         // Set button title and style
-        connectButton?.setTitle("Connect", for: .normal)
-        connectButton?.setTitleColor(.white, for: .normal)
-        connectButton?.layer.cornerRadius = 8
-        connectButton?.backgroundColor = .systemBlue
-        
+//        connectButton?.setTitle("Connect", for: .normal)
+//        connectButton?.setTitleColor(.white, for: .normal)
+//        connectButton?.layer.cornerRadius = 8
+//        connectButton?.backgroundColor = .systemBlue
+//        connectButton?.titleLabel?.font = UIFont.systemFont(ofSize: 6) // made font smaller so it fits on one line
+            
         // Disable autoresizing mask translation for all views
 //        profileImageView?.image = UIImage(named: "profile_img")
         profileImageView?.translatesAutoresizingMaskIntoConstraints = false

@@ -67,7 +67,6 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
                 let region = MKCoordinateRegion(center: coordinates, latitudinalMeters: 0.1, longitudinalMeters: 0.1)
             self.mapView.setRegion(region, animated: true)
         }
-        
     }
     
     // MARK: - MongoDB Connection
