@@ -89,11 +89,11 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
     /// Loads pseudo data for demonstration purposes
     func loadPseudoData() {
         profiles = [
-            User(username: "Alice", password: "password1"),
-            User(username: "Bob", password: "password2"),
-            User(username: "Charlie", password: "password3"),
-            User(username: "Diana", password: "password4"),
-            User(username: "Eve", password: "password5")
+            User(username: "Alice", password: "password1", email: ""),
+            User(username: "Bob", password: "password2", email: ""),
+            User(username: "Charlie", password: "password3", email: ""),
+            User(username: "Diana", password: "password4", email: ""),
+            User(username: "Eve", password: "password5", email: "")
         ]
         
         filteredProfiles = profiles
