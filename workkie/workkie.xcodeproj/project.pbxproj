@@ -16,6 +16,7 @@
 		7F5062BF2CE1273400E529F8 /* DetailedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F5062BE2CE1273400E529F8 /* DetailedViewController.swift */; };
 		7FA857922CE3BA8900F7B0AC /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA857912CE3BA8900F7B0AC /* CustomTableViewCell.swift */; };
 		C3421A262CE44B7E00B22A64 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3421A252CE44B7E00B22A64 /* Main.storyboard */; };
+		C34FA3F42CEAA64B00D3E0C5 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C34FA3F32CEAA64B00D3E0C5 /* LocationManager.swift */; };
 		C35C876F2CE008C6002AA2C1 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35C876E2CE008C6002AA2C1 /* Post.swift */; };
 		C371B8602CDABB0000890F02 /* MongoTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C371B85F2CDABB0000890F02 /* MongoTest.swift */; };
 		C371B8632CDAC64700890F02 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = C371B8622CDAC64700890F02 /* User.swift */; };
@@ -41,6 +42,7 @@
 		7F5062BE2CE1273400E529F8 /* DetailedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedViewController.swift; sourceTree = "<group>"; };
 		7FA857912CE3BA8900F7B0AC /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
 		C3421A252CE44B7E00B22A64 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		C34FA3F32CEAA64B00D3E0C5 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		C35C876E2CE008C6002AA2C1 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		C35C87702CE028E5002AA2C1 /* tutorial.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = tutorial.md; sourceTree = "<group>"; };
 		C371B85F2CDABB0000890F02 /* MongoTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MongoTest.swift; sourceTree = "<group>"; };
@@ -80,6 +82,14 @@
 			path = connectVC;
 			sourceTree = "<group>";
 		};
+		C34FA3F22CEAA64200D3E0C5 /* Location */ = {
+			isa = PBXGroup;
+			children = (
+				C34FA3F32CEAA64B00D3E0C5 /* LocationManager.swift */,
+			);
+			path = Location;
+			sourceTree = "<group>";
+		};
 		C371B85C2CDABAD400890F02 /* database */ = {
 			isa = PBXGroup;
 			children = (
@@ -117,6 +127,7 @@
 		C3A53E342CD8676900D105EC /* workkie */ = {
 			isa = PBXGroup;
 			children = (
+				C34FA3F22CEAA64200D3E0C5 /* Location */,
 				7A0BB4412CE0741D00275E24 /* connectVC */,
 				C371B8612CDAC64000890F02 /* model */,
 				C371B85C2CDABAD400890F02 /* database */,
@@ -221,6 +232,7 @@
 			files = (
 				7A0BB43E2CE0673E00275E24 /* ConnectViewController.swift in Sources */,
 				7F5062BF2CE1273400E529F8 /* DetailedViewController.swift in Sources */,
+				C34FA3F42CEAA64B00D3E0C5 /* LocationManager.swift in Sources */,
 				C3A53E3A2CD8676900D105EC /* ViewController.swift in Sources */,
 				7FA857922CE3BA8900F7B0AC /* CustomTableViewCell.swift in Sources */,
 				00F4E2F22CE0091B0069C29E /* LoginViewController.swift in Sources */,
@@ -380,6 +392,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = workkie/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Workkie;
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "We need your locations to find users around you.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need your locations to find users around you.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -411,6 +425,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = workkie/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Workkie;
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "We need your locations to find users around you.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need your locations to find users around you.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

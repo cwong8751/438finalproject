@@ -6,16 +6,20 @@
 //
 
 import UIKit
+import MapKit
 //import MongoKitten  // Ensure you have MongoKitten installed and properly configured
 
-class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
+class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, MKMapViewDelegate {
     
+    // define location manager for map
+    let locationManager = LocationManager()
     
     // I just fixed your code because it giving me errors when i am merging.
     
     // MARK: - Outlets
     @IBOutlet var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var mapView: MKMapView!
     
     // MARK: - Properties
     var profiles: [User] = []
@@ -46,6 +50,24 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
         } else {
             loadPseudoData()
         }
+        
+        // set up mapview
+        mapView.mapType = .standard
+        mapView.showsUserLocation = true
+        mapView.setUserTrackingMode(.follow, animated: true)
+        
+        locationManager.requestLocation()
+        
+        // set up location manager
+        locationManager.$userCoordinates
+            .receive(on: DispatchQueue.main)
+            .sink {
+            [weak self] coordinates in
+            guard let self = self, let coordinates = coordinates else {return}
+                let region = MKCoordinateRegion(center: coordinates, latitudinalMeters: 0.1, longitudinalMeters: 0.1)
+            self.mapView.setRegion(region, animated: true)
+        }
+        
     }
     
     // MARK: - MongoDB Connection

@@ -104,7 +104,7 @@
                                 <rect key="frame" x="0.0" y="369" width="393" height="400"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1fr-dn-Dyj">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsUserLocation="YES" showsUserTrackingButton="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1fr-dn-Dyj">
                                 <rect key="frame" x="0.0" y="115" width="393" height="255"/>
                                 <standardMapConfiguration key="preferredConfiguration"/>
                             </mapView>
@@ -137,6 +137,7 @@
                     </tabBarItem>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="mapView" destination="1fr-dn-Dyj" id="XVt-CE-za7"/>
                         <outlet property="searchBar" destination="ngl-ky-Det" id="cSo-p7-WJA"/>
                         <outlet property="tableView" destination="1cw-oC-hH0" id="2P3-Pw-PTR"/>
                     </connections>
