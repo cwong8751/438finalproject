@@ -112,9 +112,13 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 //                    // delete failed
 //                }
                 
+// NOTE FOR CARL: The two lines of code below are commented out to enable the mapping feature.
+// The mapping functionality requires latitude and longitude values to be saved for each user.
+
+
 //                Creating a new user
-                let user = User(username: "", password: "")
-                try await self.dbManager.insertUser(user: user)
+//                let user = User(username: "", password: "")
+//               try await self.dbManager.insertUser(user: user)
                 
                 
             }

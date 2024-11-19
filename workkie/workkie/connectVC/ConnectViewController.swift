@@ -21,146 +21,262 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var mapView: MKMapView!
     
+    
+    
     // MARK: - Properties
-    var profiles: [User] = []
-    var filteredProfiles: [User] = []
+     var profiles: [User] = []
+     var filteredProfiles: [User] = []
+     
+     let mongoTest = MongoTest()  // Instance to handle MongoDB operations
+     let useRealData = false  // Toggle between real data and pseudo data
+     
+     // MARK: - Lifecycle Methods
+     override func viewDidLoad() {
+         super.viewDidLoad()
+         
+         // Setup delegates and data sources
+         tableView.delegate = self
+         tableView.dataSource = self
+         searchBar.delegate = self
+         mapView.delegate = self
+         
+         // Register the custom cell nib
+         tableView.register(UINib(nibName: "ProfileCell", bundle: nil), forCellReuseIdentifier: "ProfileCell")
+         
+         // Adjust row height for better UI
+         tableView.rowHeight = 60
+         
+         // Check whether to use real MongoDB data or pseudo data
+         if useRealData {
+             connectToMongoDB()
+         } else {
+             loadPseudoData()
+         }
+         
+         // Setup map view
+         setupMapView()
+     }
+     
+     // MARK: - Map View Setup
+     private func setupMapView() {
+         mapView.mapType = .standard
+         mapView.showsUserLocation = true
+         mapView.setUserTrackingMode(.follow, animated: true)
+         locationManager.requestLocation()
+     }
+     
+     /// Updates map annotations for all users
+     private func updateMapAnnotationsForAllUsers() {
+         // Remove existing annotations to avoid duplication
+         mapView.removeAnnotations(mapView.annotations)
+         
+         // Add annotations for all profiles with valid latitude and longitude
+         for user in profiles {
+             guard let lat = user.latitude, let lon = user.longitude else { continue }
+             let annotation = MKPointAnnotation()
+             annotation.coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+             annotation.title = user.username
+             mapView.addAnnotation(annotation)
+         }
+     }
+     
+     // MARK: - MongoDB Connection
+     func connectToMongoDB() {
+         Task {
+             do {
+                 // Replace with your actual MongoDB URI
+                 try await mongoTest.connect(uri: "mongodb+srv://chengli:Luncy1234567890@users.at6lb.mongodb.net/users?authSource=admin&appName=Users")
+                 
+                 print("Connected to MongoDB successfully!")
+                 await loadUserProfiles()  // Load data after successful connection
+             } catch {
+                 print("Failed to connect to MongoDB: \(error)")
+                 loadPseudoData()  // Optionally load pseudo data if real data fails
+             }
+         }
+     }
+     
+     // MARK: - Data Loading Methods
+     func loadUserProfiles() async {
+         if let users = await mongoTest.getUsers() {
+             profiles = users
+             filteredProfiles = profiles
+             DispatchQueue.main.async {
+                 self.tableView.reloadData()
+                 self.updateMapAnnotationsForAllUsers()  // Update map after loading data
+             }
+         } else {
+             print("No users found in MongoDB.")
+         }
+     }
+     
+     func loadPseudoData() {
+         profiles = [
+             User(username: "Alice", password: "password1", latitude: 37.7749, longitude: -122.4194),
+             User(username: "Bob", password: "password2", latitude: 37.7753, longitude: -122.4200),
+             User(username: "Charlie", password: "password3", latitude: 34.0522, longitude: -118.2437),
+             User(username: "Diana", password: "password4", latitude: 51.5074, longitude: -0.1278),
+             User(username: "Eve", password: "password5", latitude: 48.8566, longitude: 2.3522)
+         ]
+         
+         filteredProfiles = profiles
+         tableView.reloadData()
+         updateMapAnnotationsForAllUsers()  // Update map after loading pseudo data
+     }
+     
+     // MARK: - UITableViewDataSource Methods
+     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+         return filteredProfiles.count
+     }
+     
+     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ProfileCell", for: indexPath) as? ProfileCell else {
+             return UITableViewCell()
+         }
+         
+         // Configure the cell with user data
+         let user = filteredProfiles[indexPath.row]
+         cell.nameLabel?.text = user.username
+         cell.designationLabel?.text = "Software Engineer"  // Placeholder; modify as needed
+         cell.profileImageView?.image = UIImage(named: "profile_img")  // Ensure the image exists in your assets
+         
+         
+         // Add an action for the Connect button
+             cell.connectButton.addTarget(self, action: #selector(connectButtonTapped(_:)), for: .touchUpInside)
+             cell.connectButton.tag = indexPath.row  // Use the tag to identify the selected row
+
+         
+         return cell
+     }
     
-    let mongoTest = MongoTest()  // Instance to handle MongoDB operations
-    
-    // Toggle to switch between real MongoDB data and pseudo data
-    let useRealData = false
-    
-    // MARK: - Lifecycle Methods
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        // Setup delegates and data sources
-        tableView.delegate = self
-        tableView.dataSource = self
-        searchBar.delegate = self
-        
-        // Register the custom cell nib
-        tableView.register(UINib(nibName: "ProfileCell", bundle: nil), forCellReuseIdentifier: "ProfileCell")
-        
-        // Adjust row height for better UI
-        tableView.rowHeight = 60
-        
-        if useRealData {
-            connectToMongoDB()
-        } else {
-            loadPseudoData()
-        }
-        
-        // set up mapview
-        mapView.mapType = .standard
-        mapView.showsUserLocation = true
-        mapView.setUserTrackingMode(.follow, animated: true)
-        
-        locationManager.requestLocation()
-        
-        // set up location manager
-        locationManager.$userCoordinates
-            .receive(on: DispatchQueue.main)
-            .sink {
-            [weak self] coordinates in
-            guard let self = self, let coordinates = coordinates else {return}
-                let region = MKCoordinateRegion(center: coordinates, latitudinalMeters: 0.1, longitudinalMeters: 0.1)
-            self.mapView.setRegion(region, animated: true)
-        }
-    }
-    
-    // MARK: - MongoDB Connection
-    func connectToMongoDB() {
+    @objc func connectButtonTapped(_ sender: UIButton) {
+        let selectedIndex = sender.tag
+        let selectedUser = filteredProfiles[selectedIndex]
+
+        // Example: Simulate sending a connection request to the backend or database
         Task {
             do {
-                // Replace with your actual MongoDB URI
-                try await mongoTest.connect(uri: "mongodb+srv://chengli:Luncy1234567890@users.at6lb.mongodb.net/users?authSource=admin&appName=Users")
-                
-                print("Connected to MongoDB successfully!")
-                
-                // Load data after successful connection
-                await loadUserProfiles()
-            } catch {
-                print("Failed to connect to MongoDB: \(error)")
-                // Optionally, load pseudo data if real data fails
-                loadPseudoData()
-            }
-        }
-    }
-    
-    // MARK: - Data Loading Methods
-    
-    /// Loads user profiles from MongoDB asynchronously
-    func loadUserProfiles() async {
-        if let users = await mongoTest.getUsers() {  // Ensure getUsers() is properly implemented
-            profiles = users
-            filteredProfiles = profiles
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        } else {
-            print("No users found in MongoDB.")
-            // Optionally, load pseudo data if no users are found
-            DispatchQueue.main.async {
-                self.loadPseudoData()
-            }
-        }
-    }
-    
-    /// Loads pseudo data for demonstration purposes
-    func loadPseudoData() {
-        profiles = [
-            User(username: "Alice", password: "password1"),
-            User(username: "Bob", password: "password2"),
-            User(username: "Charlie", password: "password3"),
-            User(username: "Diana", password: "password4"),
-            User(username: "Eve", password: "password5")
-        ]
-        
-        filteredProfiles = profiles
-        tableView.reloadData()
-    }
-    
-    // MARK: - UITableViewDataSource Methods
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filteredProfiles.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+                // Assuming `sendConnectionRequest` is a method in your `MongoTest` class
+                let isRequestSent = try await mongoTest.sendConnectionRequest(to: selectedUser.username)
 
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ProfileCell", for: indexPath) as? ProfileCell else {
-            // Return a default cell if casting fails
-            return UITableViewCell()
+                DispatchQueue.main.async {
+                    if isRequestSent {
+                        // Show a success alert
+                        let alert = UIAlertController(
+                            title: "Request Sent",
+                            message: "Connection request has been sent to \(selectedUser.username).",
+                            preferredStyle: .alert
+                        )
+                        alert.addAction(UIAlertAction(title: "OK", style: .default))
+                        self.present(alert, animated: true)
+                    } else {
+                        // Show a failure alert
+                        let alert = UIAlertController(
+                            title: "Request Failed",
+                            message: "Could not send connection request. Please try again later.",
+                            preferredStyle: .alert
+                        )
+                        alert.addAction(UIAlertAction(title: "OK", style: .default))
+                        self.present(alert, animated: true)
+                    }
+                }
+            } catch {
+                // Handle errors and show an error alert
+                DispatchQueue.main.async {
+                    let alert = UIAlertController(
+                        title: "Error",
+                        message: "An error occurred: \(error.localizedDescription)",
+                        preferredStyle: .alert
+                    )
+                    alert.addAction(UIAlertAction(title: "OK", style: .default))
+                    self.present(alert, animated: true)
+                }
+            }
+        }
+    }
+
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // Get the selected user
+        let selectedUser = filteredProfiles[indexPath.row]
+        
+        // Ensure the user has a valid location (latitude and longitude)
+        if let latitude = selectedUser.latitude, let longitude = selectedUser.longitude {
+            let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+            
+            // Center the map on the selected user's location
+            let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
+            mapView.setRegion(region, animated: true)
+            
+            // Remove old annotations and add a new one for the selected user
+            mapView.removeAnnotations(mapView.annotations)
+            
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = coordinate
+            annotation.title = selectedUser.username
+            mapView.addAnnotation(annotation)
+        } else {
+            // Show an alert if the user's location is unavailable
+            let alert = UIAlertController(title: "Location Unavailable", message: "The selected user does not have a valid location.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            present(alert, animated: true, completion: nil)
         }
         
-        // Configure the cell with user data
-        let user = filteredProfiles[indexPath.row]
-        cell.nameLabel?.text = user.username
-        cell.designationLabel?.text = "Software Engineer"  // Placeholder; modify as needed
-        
-        // Set the profile image (ensure "profile_img" exists in your assets)
-        cell.profileImageView?.image = UIImage(named: "profile_img")
-        
-        return cell
+        // Deselect the row after handling the tap
+        tableView.deselectRow(at: indexPath, animated: true)
     }
-    
-    // MARK: - UISearchBarDelegate Methods
-    
+
+     
+     // MARK: - UISearchBarDelegate Methods
+//     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+//         if searchText.isEmpty {
+//             filteredProfiles = profiles
+//         } else {
+//             filteredProfiles = profiles.filter { user in
+//                 user.username.lowercased().contains(searchText.lowercased())
+//             }
+//         }
+//         tableView.reloadData()
+//     }
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        // Filter profiles based on search text
         if searchText.isEmpty {
             filteredProfiles = profiles
+            mapView.removeAnnotations(mapView.annotations)  // Clear map annotations
+            updateMapAnnotationsForAllUsers()  // Re-add all annotations
         } else {
+            // Filter profiles based on search text
             filteredProfiles = profiles.filter { user in
                 user.username.lowercased().contains(searchText.lowercased())
             }
+            
+            // If there are filtered results, focus on the first one on the map
+            if let firstUser = filteredProfiles.first, let lat = firstUser.latitude, let lon = firstUser.longitude {
+                let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+                
+                // updates the map
+                let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
+                mapView.setRegion(region, animated: true)
+                
+                // removes old annotations and add only the matching annotations
+                mapView.removeAnnotations(mapView.annotations)
+                for user in filteredProfiles {
+                    if let lat = user.latitude, let lon = user.longitude {
+                        let annotation = MKPointAnnotation()
+                        annotation.coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+                        annotation.title = user.username
+                        mapView.addAnnotation(annotation)
+                    }
+                }
+            } else {
+                // If no results, remove annotations and reset map
+                mapView.removeAnnotations(mapView.annotations)
+            }
         }
         tableView.reloadData()
     }
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        // Dismiss the keyboard when search button is clicked
-        searchBar.resignFirstResponder()
-    }
-}
+
+     
+     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+         searchBar.resignFirstResponder()
+     }
+ }

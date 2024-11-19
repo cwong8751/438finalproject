@@ -252,6 +252,31 @@ class MongoTest {
         }
     }
     
+    func sendConnectionRequest(to username: String) async throws -> Bool {
+        guard let database = database else {
+            print("Database is not connected.")
+            throw NSError(domain: "DatabaseError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Database not connected"])
+        }
+
+        let collection = database["connection_requests"]
+        let request: Document = [
+            "from": UserDefaults.standard.string(forKey: "loggedInUsername") ?? "Unknown",
+            "to": username,
+            "status": "pending",
+            "timestamp": Date()
+        ]
+
+        do {
+            try await collection.insert(request)
+            print("Connection request sent to \(username).")
+            return true
+        } catch {
+            print("Failed to send connection request: \(error)")
+            return false
+        }
+    }
+
+    
     // function to edit post
     //TODO: 
 }
