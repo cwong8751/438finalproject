@@ -17,16 +17,18 @@ class User: Codable {
     var education: String?
     var degree: String?
     var connectionRequests: [ConnectionRequest]?
+    var connections: [Connection]?
     
     init(username: String, password: String) {
         self.username = username
         self.password = password
         self._id = nil // let mongo set it for us
-        self.latitude = nil
-        self.longitude = nil
+        self.latitude = 0
+        self.longitude = 0
         self.education = nil
         self.degree = nil
         self.connectionRequests = []
+        self.connections = []
     }
     
     init(username: String, password: String, latitude: Double?, longitude: Double?) {
@@ -38,6 +40,7 @@ class User: Codable {
         self.education = nil
         self.degree = nil
         self.connectionRequests = []
+        self.connections = []
     }
     
     init(id: ObjectId, username: String, password: String, latitude: Double?, longitude: Double?) {
@@ -49,6 +52,7 @@ class User: Codable {
         self.education = nil
         self.degree = nil
         self.connectionRequests = []
+        self.connections = []
     }
     
     init(id: ObjectId, username: String, password: String, latitude: Double?, longitude: Double?, connectionRequests: [ConnectionRequest]) {
@@ -58,5 +62,36 @@ class User: Codable {
         self.latitude = latitude
         self.longitude = longitude
         self.connectionRequests = connectionRequests
+        self.connections = []
     }
+    
+    init(id: ObjectId, username: String, password: String, latitude: Double?, longitude: Double?, connectionRequests: [ConnectionRequest], connections: [Connection]) {
+        self._id = id
+        self.username = username
+        self.password = password
+        self.latitude = latitude
+        self.longitude = longitude
+        self.connectionRequests = connectionRequests
+        self.connections = connections
+    }
+    
+    func toDocument() -> Document {
+        var document: Document = [
+            "username": username,
+            "password": password,
+            "connectionRequests": connectionRequests?.map { $0.toDocument() } ?? [],
+            "connections": connections?.map { $0.toDocument() } ?? [],
+            "latitude": latitude ?? 0,
+            "longitude": longitude ?? 0,
+            "education": education ?? "N/A",
+            "degree": degree ?? "N/A"
+        ]
+        
+        if let id = _id {
+            document["_id"] = id
+        }
+        
+        return document
+    }
+
 }

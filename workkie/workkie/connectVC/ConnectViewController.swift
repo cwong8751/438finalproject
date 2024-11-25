@@ -19,8 +19,6 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var mapView: MKMapView!
     
-    
-    
     // MARK: - Properties
      var profiles: [User] = []
      var filteredProfiles: [User] = []
@@ -28,6 +26,7 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
      let mongoTest = MongoTest()  // Instance to handle MongoDB operations
      let useRealData = true  // Toggle between real data and pseudo data
     var currentUser: ObjectId?
+    var currentUsername: String?
      
      // MARK: - Lifecycle Methods
      override func viewDidLoad() {
@@ -61,8 +60,11 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
                  await setUserCoordinates()
              }
          }
+         
+         startFetchConnectionRequest()
      }
     
+    //FIXME: this does not work
     private func setUserCoordinates() async {
         // get user's latitude and longitude and update it to mongo
         let userCoord = locationManager.userCoordinates
@@ -70,7 +72,11 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
         // get current user
         if let loggedInUser = UserDefaults.standard.string(forKey: "loggedInUserID") {
             
+            // set global variables
             currentUser = ObjectId(loggedInUser)
+            currentUsername = UserDefaults.standard.string(forKey: "loggedInUsername") ?? ""
+            
+            print("current user is: ", currentUsername)
             
             // get user specifics
             let allUsers = await mongoTest.getUsers()
@@ -199,7 +205,7 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
         Task {
             do {
                 
-                let clRequest = ConnectionRequest(fromUser: currentUser!, toUser: selectedUser._id!, status: "pending", date: Date())
+                let clRequest = ConnectionRequest(fromUser: currentUser!, toUser: selectedUser._id!, status: "pending", date: Date(), fromUsername: currentUsername!, toUsername: selectedUser.username)
                 
                 let isRequestSent = try await mongoTest.sendConnectionRequest(clRequest: clRequest)
 
@@ -323,4 +329,84 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
      func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
          searchBar.resignFirstResponder()
      }
+    
+    // function to fetch incoming requests every x seconds
+    func startFetchConnectionRequest() {
+        // schedule a timer to fetch every 1 minute
+        
+        Timer.scheduledTimer(withTimeInterval: 20.0, repeats: true) { timer in
+            Task {
+                do {
+                    
+                    // check if user is actually logged in
+                    if self.currentUser?.hexString == nil && self.currentUsername == nil {
+                        print("user not logged in, not fetching connection requests")
+                    }
+                    else{
+                        print("fetching connection requests")
+                        print("current user", self.currentUser?.hexString)
+                        let cRequests = try await self.mongoTest.getConnectionRequest(userId: self.currentUser!)
+                        
+                        // get all pending connection requests
+                        for rq in cRequests! {
+                            
+                            if rq.status == "pending" {
+                                let cnRequestMessage = rq.fromUsername + " wants to connect with you"
+                                // show alert
+                                let alert = UIAlertController(title: "New Connection Request", message: cnRequestMessage , preferredStyle: .alert)
+
+                                alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { _ in
+                                    // handle when user cancels connection request
+                                }))
+
+                                alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { _ in
+                                    // handle when user confirms connection request
+                                    
+                                    // get the old user
+                                    Task {
+                                        do{
+                                            let gUser = try await self.mongoTest.getUser(userId: self.currentUser!)
+                                            
+                                            // Safely unwrap gUser
+                                            if let gUser = gUser {
+                                                // Ensure connections array is non-nil
+                                                var updatedConnections = gUser.connections ?? []
+
+                                                // Create new connection and append to the array
+                                                let nConnection = Connection(username: rq.fromUsername)
+                                                updatedConnections.append(nConnection)
+                                                
+                                                // Create new user with updated connections
+                                                let newUser = User(
+                                                    id: gUser._id!,
+                                                    username: gUser.username,
+                                                    password: gUser.password,
+                                                    latitude: gUser.latitude,
+                                                    longitude: gUser.longitude,
+                                                    connectionRequests: [], // Assuming requests are cleared
+                                                    connections: updatedConnections
+                                                )
+                                                
+                                                // creates a new user to replace the old one, remove the existing connection request
+                                                try await self.mongoTest.updateUser(newUser: newUser)
+                                            }
+                                        }
+                                        catch {
+                                            print(error)
+                                        }
+                                    }
+                                }))
+
+                                self.present(alert, animated: true, completion: nil)
+                            }
+                            // else ignore the request because it is already fulfilled
+                        }
+                    }
+                }
+                catch {
+                    print(error)
+                }
+            }
+        }
+    }
  }

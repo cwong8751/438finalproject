@@ -64,6 +64,7 @@ class LoginViewController: UIViewController {
                     
                     if let userID = userDocument["_id"] as? ObjectId {
                         UserDefaults.standard.set(userID.hexString, forKey: "loggedInUserID")
+                        UserDefaults.standard.set(username, forKey: "loggedInUsername")
                         // self.performSegue(withIdentifier: "showProfile", sender: self)
                     } else {
                         print("User ID not found in document.")

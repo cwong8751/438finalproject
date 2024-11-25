@@ -15,6 +15,9 @@ class RegisterViewController: UIViewController {
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var registerButton: UIButton!
+    
+    let dbManager = MongoTest()
+    
     func connect(uri: String) async throws -> MongoDatabase {
         database = try await MongoDatabase.connect(to: uri)
         return database!
@@ -64,15 +67,10 @@ class RegisterViewController: UIViewController {
                     return
                 }
                 
-                let newUser: Document = [
-                    "email": email,
-                    "username": username,
-                    "password": password,
-                    "education": "N/A",
-                    "degree": "N/A"
-                ]
+                let newUser = User(username: username, password: password)
                 
-                try await collection.insert(newUser)
+                try await dbManager.connect(uri: "mongodb+srv://chengli:Luncy1234567890@users.at6lb.mongodb.net/users?authSource=admin&appName=Users")
+                try await dbManager.insertUser(user: newUser)
                 print("User registered successfully.")
                 
                 // e.g., self.performSegue(withIdentifier: "showLogin", sender: self)

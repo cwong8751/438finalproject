@@ -27,7 +27,7 @@ class MongoTest {
         }
         
         let collection = database["users"]
-        let insUser: Document  = ["username": user.username, "password": user.password] // make document
+        let insUser = user.toDocument()
         
         do{
             // TODO: add a error message when user tries to add duplicate username
@@ -113,6 +113,8 @@ class MongoTest {
         //let filter: Document = ["_id": newUser._id]
         
         let connectionRequestsDocuments = newUser.connectionRequests?.map { $0.toDocument() } ?? []
+        
+        let connectionDocuments = newUser.connections?.map { $0.toDocument() } ?? []
 
         let updatedUser: Document = [
             "username": newUser.username,
@@ -120,6 +122,7 @@ class MongoTest {
             "longitude": newUser.longitude ?? 0.0,
             "latitude": newUser.latitude ?? 0.0,
             "connectionRequests": connectionRequestsDocuments,
+            "connections": connectionDocuments
         ]
         
         do {
@@ -333,61 +336,30 @@ class MongoTest {
             print(error)
             return false
         }
-        
-        return true
     }
     
-    // function to establish change streams for connection requests
-    //    func establishChangeStream() async throws -> Bool {
-    //        guard let database = database else {
-    //            print("Database is not connected.")
-    //            return false
-    //        }
-    //
-    //        let collection = database["users"]
-    //
-    //
-    //        // define filter to only listen for connectionrequests
-    //        let pipeline: [Document] = [
-    //            [
-    //                "$match": [
-    //                    "$or": [
-    //                        // Capture updates where 'connectionRequest' is modified
-    //                        [
-    //                            "operationType": ["$in": ["update", "replace"]],
-    //                            "updateDescription.updatedFields.connectionRequests": ["$exists": true]
-    //                        ],
-    //                        // Capture updates where 'connectionRequest' is removed
-    //                        [
-    //                            "operationType": ["$in": ["update", "replace"]],
-    //                            "updateDescription.removedFields": ["$in": ["connectionRequests"]]
-    //                        ],
-    //                        // Capture insert operations where 'connectionRequest' is present
-    //                        [
-    //                            "operationType": "insert",
-    //                            "fullDocument.connectionRequests": ["$exists": true]
-    //                        ],
-    //                        // Capture replace operations where 'connectionRequest' is present
-    //                        [
-    //                            "operationType": "replace",
-    //                            "fullDocument.connectionRequests": ["$exists": true]
-    //                        ]
-    //                    ]
-    //                ]
-    //        ]
-    //            ]
-    //
-    //
-    //        do {
-    //            let aggOperation = ChangeStreamOptions
-    //            let changeStream = try collection.watch()
-    //
-    //            print("established change stream")
-    //
-    //            for try await change in changeStream {
-    //                // listen for change stream
-    //                //TODO: finish this
-    //
-    //        }
-    //    }
+    // function to get all connection requests for a specific user
+    func getConnectionRequest(userId: ObjectId) async -> [ConnectionRequest]? {
+        guard let database = database else {
+            print("Database is not connected.")
+            return nil
+        }
+        
+        do {
+            // get user
+            let gotUser = try await getUser(userId: userId)
+            
+            if let gUser = gotUser {
+                print("got connection requests success")
+                return gUser.connectionRequests ?? []
+            }
+            else{
+                print("get connection requests fail")
+                return nil
+            }
+        } catch {
+            print("get connection requests fail")
+            return nil
+        }
+    }
 }
