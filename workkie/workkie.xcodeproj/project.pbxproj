@@ -25,6 +25,7 @@
 		C3A53E3A2CD8676900D105EC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A53E392CD8676900D105EC /* ViewController.swift */; };
 		C3A53E3F2CD8676A00D105EC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3A53E3E2CD8676A00D105EC /* Assets.xcassets */; };
 		C3A53E422CD8676A00D105EC /* Base in Resources */ = {isa = PBXBuildFile; fileRef = C3A53E412CD8676A00D105EC /* Base */; };
+		C3AE42A02CF30A8A00164219 /* ConnectionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3AE429F2CF30A8A00164219 /* ConnectionRequest.swift */; };
 		C3FC87612CDB10C100AA4C16 /* Meow in Frameworks */ = {isa = PBXBuildFile; productRef = C3FC87602CDB10C100AA4C16 /* Meow */; };
 		C3FC87632CDB10C100AA4C16 /* MongoClient in Frameworks */ = {isa = PBXBuildFile; productRef = C3FC87622CDB10C100AA4C16 /* MongoClient */; };
 		C3FC87652CDB10C100AA4C16 /* MongoCore in Frameworks */ = {isa = PBXBuildFile; productRef = C3FC87642CDB10C100AA4C16 /* MongoCore */; };
@@ -54,6 +55,7 @@
 		C3A53E3E2CD8676A00D105EC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C3A53E412CD8676A00D105EC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C3A53E432CD8676A00D105EC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C3AE429F2CF30A8A00164219 /* ConnectionRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionRequest.swift; sourceTree = "<group>"; };
 		C3FC87682CDB132B00AA4C16 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -104,6 +106,7 @@
 			children = (
 				C371B8622CDAC64700890F02 /* User.swift */,
 				C35C876E2CE008C6002AA2C1 /* Post.swift */,
+				C3AE429F2CF30A8A00164219 /* ConnectionRequest.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -241,6 +244,7 @@
 				C3A53E362CD8676900D105EC /* AppDelegate.swift in Sources */,
 				C371B8602CDABB0000890F02 /* MongoTest.swift in Sources */,
 				C35C876F2CE008C6002AA2C1 /* Post.swift in Sources */,
+				C3AE42A02CF30A8A00164219 /* ConnectionRequest.swift in Sources */,
 				7ADCAD532CE324610065ACB0 /* ProfileCell.swift in Sources */,
 				C371B8632CDAC64700890F02 /* User.swift in Sources */,
 				00F4E2F42CE009380069C29E /* RegisterViewController.swift in Sources */,

@@ -69,16 +69,68 @@ class MongoTest {
                 }
             }
             
-            // debug
-//            print("Retrieved Users:")
-//            for user in users {
-//                print("Username: \(user.username), Password: \(user.password)")
-//            }
-            
             return users
         } catch {
             print("Failed to retrieve users: \(error)")
             return nil
+        }
+    }
+    
+    // function get single user
+    func getUser(userId: ObjectId) async throws -> User? {
+        guard let database = database else {
+            print("Database is not connected.")
+            return nil
+        }
+        
+        let collection = database["users"]
+        
+        do {
+            if let findResult = try await collection.findOne("_id" == userId) {
+                let decoder = BSONDecoder()
+                let gotUser = try decoder.decode(User.self, from: findResult)
+                print("Found user ok")
+                return gotUser
+            }
+            else{
+                return nil
+                print("Found user \(userId) fail")
+            }
+        } catch {
+            print("Found user \(userId) fail")
+            return nil
+        }
+    }
+    
+    // function to update user
+    func updateUser(newUser: User) async throws -> Bool {
+        guard let database = database else {
+            print("Database is not connected.")
+            return false
+        }
+        
+        let collection = database["users"]
+        //let filter: Document = ["_id": newUser._id]
+        
+        let connectionRequestsDocuments = newUser.connectionRequests?.map { $0.toDocument() } ?? []
+
+        let updatedUser: Document = [
+            "username": newUser.username,
+            "password": newUser.password,
+            "longitude": newUser.longitude ?? 0.0,
+            "latitude": newUser.latitude ?? 0.0,
+            "connectionRequests": connectionRequestsDocuments,
+        ]
+        
+        do {
+            let updateResult = try await collection.updateOne(where: "_id" == newUser._id, to: updatedUser)
+            print("updated user count: ", updateResult.updatedCount)
+            return true
+        }
+        catch{
+            print(error)
+            print("update user failed")
+            return false
         }
     }
     
@@ -252,32 +304,90 @@ class MongoTest {
         }
     }
     
-    func sendConnectionRequest(to username: String) async throws -> Bool {
+    func sendConnectionRequest(clRequest: ConnectionRequest) async throws -> Bool {
         guard let database = database else {
             print("Database is not connected.")
-            throw NSError(domain: "DatabaseError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Database not connected"])
-        }
-
-        let collection = database["connection_requests"]
-        let request: Document = [
-            "from": UserDefaults.standard.string(forKey: "loggedInUsername") ?? "Unknown",
-            "to": username,
-            "status": "pending",
-            "timestamp": Date()
-        ]
-
-        do {
-            try await collection.insert(request)
-            print("Connection request sent to \(username).")
-            return true
-        } catch {
-            print("Failed to send connection request: \(error)")
             return false
         }
+        
+        do{
+            // get user to send connection request to
+            let dUser = try await self.getUser(userId: clRequest.toUser)
+            
+            // modify their connection requests field
+            let dUserNew = User(id: dUser!._id!, username: dUser!.username, password: dUser!.password, latitude: dUser!.latitude, longitude: dUser!.longitude, connectionRequests: [clRequest])
+            
+            // put the user back
+            let updateResult = try await updateUser(newUser: dUserNew)
+            
+            if(updateResult) {
+                print("send connection request successful")
+                return true
+            }
+            else{
+                print("send connection request failed")
+                return false
+            }
+        }
+        catch {
+            print(error)
+            return false
+        }
+        
+        return true
     }
-
     
-    // function to edit post
-    //TODO: 
+    // function to establish change streams for connection requests
+    //    func establishChangeStream() async throws -> Bool {
+    //        guard let database = database else {
+    //            print("Database is not connected.")
+    //            return false
+    //        }
+    //
+    //        let collection = database["users"]
+    //
+    //
+    //        // define filter to only listen for connectionrequests
+    //        let pipeline: [Document] = [
+    //            [
+    //                "$match": [
+    //                    "$or": [
+    //                        // Capture updates where 'connectionRequest' is modified
+    //                        [
+    //                            "operationType": ["$in": ["update", "replace"]],
+    //                            "updateDescription.updatedFields.connectionRequests": ["$exists": true]
+    //                        ],
+    //                        // Capture updates where 'connectionRequest' is removed
+    //                        [
+    //                            "operationType": ["$in": ["update", "replace"]],
+    //                            "updateDescription.removedFields": ["$in": ["connectionRequests"]]
+    //                        ],
+    //                        // Capture insert operations where 'connectionRequest' is present
+    //                        [
+    //                            "operationType": "insert",
+    //                            "fullDocument.connectionRequests": ["$exists": true]
+    //                        ],
+    //                        // Capture replace operations where 'connectionRequest' is present
+    //                        [
+    //                            "operationType": "replace",
+    //                            "fullDocument.connectionRequests": ["$exists": true]
+    //                        ]
+    //                    ]
+    //                ]
+    //        ]
+    //            ]
+    //
+    //
+    //        do {
+    //            let aggOperation = ChangeStreamOptions
+    //            let changeStream = try collection.watch()
+    //
+    //            print("established change stream")
+    //
+    //            for try await change in changeStream {
+    //                // listen for change stream
+    //                //TODO: finish this
+    //
+    //        }
+    //    }
 }
-

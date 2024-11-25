@@ -7,14 +7,12 @@
 
 import UIKit
 import MapKit
-//import MongoKitten  // Ensure you have MongoKitten installed and properly configured
+import BSON
 
 class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, MKMapViewDelegate {
     
     // define location manager for map
     let locationManager = LocationManager()
-    
-    // I just fixed your code because it giving me errors when i am merging.
     
     // MARK: - Outlets
     @IBOutlet var searchBar: UISearchBar!
@@ -28,7 +26,8 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
      var filteredProfiles: [User] = []
      
      let mongoTest = MongoTest()  // Instance to handle MongoDB operations
-     let useRealData = false  // Toggle between real data and pseudo data
+     let useRealData = true  // Toggle between real data and pseudo data
+    var currentUser: ObjectId?
      
      // MARK: - Lifecycle Methods
      override func viewDidLoad() {
@@ -55,13 +54,57 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
          
          // Setup map view
          setupMapView()
+         
+         // send user current coordinates to mongo db so others can see
+         Task {
+             do {
+                 await setUserCoordinates()
+             }
+         }
      }
+    
+    private func setUserCoordinates() async {
+        // get user's latitude and longitude and update it to mongo
+        let userCoord = locationManager.userCoordinates
+        
+        // get current user
+        if let loggedInUser = UserDefaults.standard.string(forKey: "loggedInUserID") {
+            
+            currentUser = ObjectId(loggedInUser)
+            
+            // get user specifics
+            let allUsers = await mongoTest.getUsers()
+            
+            if let gotUser = allUsers?.first(where: {$0._id?.hexString == loggedInUser}) {
+                // create new user object
+                let userWithCoord = User(id: gotUser._id!, username: gotUser.username, password: gotUser.password, latitude: gotUser.latitude, longitude: gotUser.longitude)
+                
+                // insert the user back
+                Task {
+                    do {
+                        let insertResult = try await mongoTest.updateUser(newUser: userWithCoord)
+                        
+                        if insertResult {
+                            print("user coordinates updated ")
+                        }
+                        else{
+                            print("update user with coordinates failed")
+                        }
+                    }
+                    catch {
+                        print("update user with coordinates failed")
+                    }
+                }
+            }
+        }
+    }
      
      // MARK: - Map View Setup
      private func setupMapView() {
          mapView.mapType = .standard
          mapView.showsUserLocation = true
          mapView.setUserTrackingMode(.follow, animated: true)
+         mapView.showsScale = true
          locationManager.requestLocation()
      }
      
@@ -137,7 +180,7 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
          // Configure the cell with user data
          let user = filteredProfiles[indexPath.row]
          cell.nameLabel?.text = user.username
-         cell.designationLabel?.text = "Software Engineer"  // Placeholder; modify as needed
+         cell.designationLabel?.text = user.education
          cell.profileImageView?.image = UIImage(named: "profile_img")  // Ensure the image exists in your assets
          
          
@@ -153,11 +196,12 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
         let selectedIndex = sender.tag
         let selectedUser = filteredProfiles[selectedIndex]
 
-        // Example: Simulate sending a connection request to the backend or database
         Task {
             do {
-                // Assuming `sendConnectionRequest` is a method in your `MongoTest` class
-                let isRequestSent = try await mongoTest.sendConnectionRequest(to: selectedUser.username)
+                
+                let clRequest = ConnectionRequest(fromUser: currentUser!, toUser: selectedUser._id!, status: "pending", date: Date())
+                
+                let isRequestSent = try await mongoTest.sendConnectionRequest(clRequest: clRequest)
 
                 DispatchQueue.main.async {
                     if isRequestSent {
