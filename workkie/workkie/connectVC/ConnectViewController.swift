@@ -31,6 +31,9 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
     // swipe down to refresh
     let swipeRefresh = UIRefreshControl()
     
+    // db uri
+    let dbUri = "mongodb+srv://chengli:Luncy1234567890@users.at6lb.mongodb.net/users?authSource=admin&appName=Users"
+    
     
     // MARK: - Lifecycle Methods
     override func viewDidLoad() {
@@ -85,32 +88,55 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
             currentUser = ObjectId(loggedInUser)
             currentUsername = UserDefaults.standard.string(forKey: "loggedInUsername") ?? ""
             
-            print("current user is: ", currentUsername)
             
+            print("current user: ", currentUser)
+            print("current username is: ", currentUsername)
+            
+            if currentUser?.hexString == "" || currentUsername == "" {
+                print("username or user is empty, don't set user coordinates")
+                return
+            }
+            
+            print("user logged in, setting user coordinates")
             // get user specifics
-            let allUsers = await mongoTest.getUsers()
             
-            if let gotUser = allUsers?.first(where: {$0._id?.hexString == loggedInUser}) {
-                // create new user object
-                let userWithCoord = User(id: gotUser._id!, username: gotUser.username, password: gotUser.password, latitude: gotUser.latitude, longitude: gotUser.longitude)
-                
-                // insert the user back
-                Task {
-                    do {
-                        let insertResult = try await mongoTest.updateUser(newUser: userWithCoord)
+            Task {
+                do{
+                    try await mongoTest.connect(uri: dbUri)
+                    let allUsers = await self.mongoTest.getUsers()
+                    
+                    if let gotUser = allUsers?.first(where: {$0._id?.hexString == loggedInUser}) {
                         
-                        if insertResult {
-                            print("user coordinates updated ")
+                        // get current user coordinates
+                        let curLat = locationManager.userCoordinates?.latitude
+                        let curLon = locationManager.userCoordinates?.longitude
+                        
+                        // create new user object
+                        if let curLat = curLat, let curLon = curLon {
+                            let userWithCoord = User(id: gotUser._id!, username: gotUser.username, password: gotUser.password, latitude: curLat, longitude: curLon)
+                            
+                            let insertResult = try await mongoTest.updateUser(newUser: userWithCoord)
+                            
+                            if insertResult {
+                                print("user coordinates updated ")
+                            }
+                            else{
+                                print("update user with coordinates failed")
+                            }
                         }
                         else{
-                            print("update user with coordinates failed")
+                            print("get user current location failed, coordinates not set")
                         }
                     }
-                    catch {
-                        print("update user with coordinates failed")
-                    }
+                }
+                catch {
+                    print(error)
                 }
             }
+        }
+        else{
+            print("user not logged in, not setting coordinates")
+            return
         }
     }
     
@@ -131,6 +157,10 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
         // Add annotations for all profiles with valid latitude and longitude
         for user in profiles {
             guard let lat = user.latitude, let lon = user.longitude else { continue }
+            
+            // don't add annotation for the current user
+            if user._id == currentUser { continue }
+            
             let annotation = MKPointAnnotation()
             annotation.coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
             annotation.title = user.username
@@ -262,19 +292,30 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         // Ensure the user has a valid location (latitude and longitude)
         if let latitude = selectedUser.latitude, let longitude = selectedUser.longitude {
-            let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-            
-            // Center the map on the selected user's location
-            let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
-            mapView.setRegion(region, animated: true)
-            
-            // Remove old annotations and add a new one for the selected user
-            mapView.removeAnnotations(mapView.annotations)
-            
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = coordinate
-            annotation.title = selectedUser.username
-            mapView.addAnnotation(annotation)
+            // check if user's location is 0,0, 0,0 is invalid location
+//            print("latitude: ", latitude)
+//            print("longitude: ", longitude)
+            if latitude != 0.0 && longitude != 0.0 {
+                let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+                
+                // Center the map on the selected user's location
+                let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
+                mapView.setRegion(region, animated: true)
+                
+                // Remove old annotations and add a new one for the selected user
+                mapView.removeAnnotations(mapView.annotations)
+                
+                let annotation = MKPointAnnotation()
+                annotation.coordinate = coordinate
+                annotation.title = selectedUser.username
+                mapView.addAnnotation(annotation)
+            }
+            else{
+                // Show an alert if the user's location is unavailable
+                let alert = UIAlertController(title: "Location Unavailable", message: "The selected user does not have a valid location.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                present(alert, animated: true, completion: nil)
+            }
         } else {
             // Show an alert if the user's location is unavailable
             let alert = UIAlertController(title: "Location Unavailable", message: "The selected user does not have a valid location.", preferredStyle: .alert)
@@ -344,7 +385,7 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
     func startFetchConnectionRequest() {
         // schedule a timer to fetch every 1 minute
         
-        Timer.scheduledTimer(withTimeInterval: 20.0, repeats: true) { timer in
+        Timer.scheduledTimer(withTimeInterval: 60.0, repeats: true) { timer in
             Task {
                 do {
                     

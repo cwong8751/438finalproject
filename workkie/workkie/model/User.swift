@@ -23,8 +23,8 @@ class User: Codable {
         self.username = username
         self.password = password
         self._id = nil // let mongo set it for us
-        self.latitude = 0
-        self.longitude = 0
+        self.latitude = nil
+        self.longitude = nil
         self.education = nil
         self.degree = nil
         self.connectionRequests = []
