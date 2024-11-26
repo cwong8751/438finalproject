@@ -75,6 +75,18 @@ class User: Codable {
         self.connections = connections
     }
     
+    init(id: ObjectId, username: String, password: String, latitude: Double, longitude: Double, education: String, degree: String, connectionRequests: [ConnectionRequest], connections: [Connection]) {
+        self._id = id
+        self.username = username
+        self.password = password
+        self.education = education
+        self.degree = degree
+        self.longitude = longitude
+        self.latitude = latitude
+        self.connections = connections
+        self.connectionRequests = connectionRequests
+    }
+    
     func toDocument() -> Document {
         var document: Document = [
             "username": username,

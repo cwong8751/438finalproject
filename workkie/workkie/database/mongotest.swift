@@ -110,20 +110,8 @@ class MongoTest {
         }
         
         let collection = database["users"]
-        //let filter: Document = ["_id": newUser._id]
         
-        let connectionRequestsDocuments = newUser.connectionRequests?.map { $0.toDocument() } ?? []
-        
-        let connectionDocuments = newUser.connections?.map { $0.toDocument() } ?? []
-
-        let updatedUser: Document = [
-            "username": newUser.username,
-            "password": newUser.password,
-            "longitude": newUser.longitude ?? 0.0,
-            "latitude": newUser.latitude ?? 0.0,
-            "connectionRequests": connectionRequestsDocuments,
-            "connections": connectionDocuments
-        ]
+        let updatedUser = newUser.toDocument()
         
         do {
             let updateResult = try await collection.updateOne(where: "_id" == newUser._id, to: updatedUser)

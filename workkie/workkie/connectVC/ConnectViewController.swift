@@ -75,45 +75,31 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
         // start fetching connection requests
         startFetchConnectionRequest()
     }
-    
-    //FIXME: this does not work
+
     private func setUserCoordinates() async {
-        // get user's latitude and longitude and update it to mongo
-        let userCoord = locationManager.userCoordinates
         
-        // get current user
-        if let loggedInUser = UserDefaults.standard.string(forKey: "loggedInUserID") {
-            
-            // set global variables
-            currentUser = ObjectId(loggedInUser)
-            currentUsername = UserDefaults.standard.string(forKey: "loggedInUsername") ?? ""
-            
-            
+        // get user's latitude and longitude and update it to mongo
+        
+        if isLoggedIn() {
             print("current user: ", currentUser)
             print("current username is: ", currentUsername)
-            
-            if currentUser?.hexString == "" || currentUsername == "" {
-                print("username or user is empty, don't set user coordinates")
-                return
-            }
-            
             print("user logged in, setting user coordinates")
-            // get user specifics
             
             Task {
                 do{
                     try await mongoTest.connect(uri: dbUri)
                     let allUsers = await self.mongoTest.getUsers()
                     
-                    if let gotUser = allUsers?.first(where: {$0._id?.hexString == loggedInUser}) {
+                    if let gotUser = allUsers?.first(where: {$0._id?.hexString == currentUser?.hexString}) {
                         
                         // get current user coordinates
-                        let curLat = locationManager.userCoordinates?.latitude
-                        let curLon = locationManager.userCoordinates?.longitude
+                        let curLat = self.locationManager.userCoordinates?.latitude
+                        let curLon = self.locationManager.userCoordinates?.longitude
                         
                         // create new user object
                         if let curLat = curLat, let curLon = curLon {
-                            let userWithCoord = User(id: gotUser._id!, username: gotUser.username, password: gotUser.password, latitude: curLat, longitude: curLon)
+                            
+                            let userWithCoord = User(id: gotUser._id!, username: gotUser.username, password: gotUser.password, latitude: curLat, longitude: curLon, education: gotUser.education ?? "N/A", degree: gotUser.degree ?? "N/A", connectionRequests: gotUser.connectionRequests ?? [], connections: gotUser.connections ?? [])
                             
                             let insertResult = try await mongoTest.updateUser(newUser: userWithCoord)
                             
@@ -172,14 +158,12 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
     @objc func connectToMongoDB() {
         Task {
             do {
-                // Replace with your actual MongoDB URI
-                try await mongoTest.connect(uri: "mongodb+srv://chengli:Luncy1234567890@users.at6lb.mongodb.net/users?authSource=admin&appName=Users")
+                let client = try await mongoTest.connect(uri: dbUri)
                 
                 print("Connected to MongoDB successfully!")
-                await loadUserProfiles()  // Load data after successful connection
+                await loadUserProfiles()
             } catch {
                 print("Failed to connect to MongoDB: \(error)")
-                //loadPseudoData()  // Optionally load pseudo data if real data fails
             }
         }
     }
@@ -210,7 +194,7 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         filteredProfiles = profiles
         tableView.reloadData()
-        updateMapAnnotationsForAllUsers()  // Update map after loading pseudo data
+        updateMapAnnotationsForAllUsers()  // update map
     }
     
     // MARK: - UITableViewDataSource Methods
@@ -227,12 +211,12 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
         let user = filteredProfiles[indexPath.row]
         cell.nameLabel?.text = user.username
         cell.designationLabel?.text = user.education
-        cell.profileImageView?.image = UIImage(named: "profile_img")  // Ensure the image exists in your assets
+        cell.profileImageView?.image = UIImage(named: "profile_img")
         
         
         // Add an action for the Connect button
         cell.connectButton.addTarget(self, action: #selector(connectButtonTapped(_:)), for: .touchUpInside)
-        cell.connectButton.tag = indexPath.row  // Use the tag to identify the selected row
+        cell.connectButton.tag = indexPath.row  // add tag
         
         
         return cell
@@ -241,6 +225,22 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
     @objc func connectButtonTapped(_ sender: UIButton) {
         let selectedIndex = sender.tag
         let selectedUser = filteredProfiles[selectedIndex]
+        
+        // check if user is logged in first
+        if !isLoggedIn() {
+            let alert = UIAlertController(title: "Connect Failed", message: "Log in to send a connect request", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            self.present(alert, animated: true)
+            return
+        }
+        
+        // check if the user is sending the request to himself
+        if selectedUser._id == currentUser {
+            let alert = UIAlertController(title: "Connect Failed", message: "You cannot connect with yourself", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            self.present(alert, animated: true)
+            return
+        }
         
         Task {
             do {
@@ -251,7 +251,7 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 DispatchQueue.main.async {
                     if isRequestSent {
-                        // Show a success alert
+                        
                         let alert = UIAlertController(
                             title: "Request Sent",
                             message: "Connection request has been sent to \(selectedUser.username).",
@@ -260,7 +260,7 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
                         alert.addAction(UIAlertAction(title: "OK", style: .default))
                         self.present(alert, animated: true)
                     } else {
-                        // Show a failure alert
+                        
                         let alert = UIAlertController(
                             title: "Request Failed",
                             message: "Could not send connection request. Please try again later.",
@@ -271,7 +271,7 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
                     }
                 }
             } catch {
-                // Handle errors and show an error alert
+                
                 DispatchQueue.main.async {
                     let alert = UIAlertController(
                         title: "Error",
@@ -293,8 +293,6 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
         // Ensure the user has a valid location (latitude and longitude)
         if let latitude = selectedUser.latitude, let longitude = selectedUser.longitude {
             // check if user's location is 0,0, 0,0 is invalid location
-//            print("latitude: ", latitude)
-//            print("longitude: ", longitude)
             if latitude != 0.0 && longitude != 0.0 {
                 let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
                 
@@ -311,13 +309,13 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
                 mapView.addAnnotation(annotation)
             }
             else{
-                // Show an alert if the user's location is unavailable
+                
                 let alert = UIAlertController(title: "Location Unavailable", message: "The selected user does not have a valid location.", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                 present(alert, animated: true, completion: nil)
             }
         } else {
-            // Show an alert if the user's location is unavailable
+            
             let alert = UIAlertController(title: "Location Unavailable", message: "The selected user does not have a valid location.", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             present(alert, animated: true, completion: nil)
@@ -381,6 +379,27 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
         searchBar.resignFirstResponder()
     }
     
+    // function to check if the user is actually logged in
+    func isLoggedIn() -> Bool {
+        
+        // check local view controller first for faster results
+        if (currentUser?.hexString != nil && currentUser?.hexString != "") && (currentUsername != nil && currentUsername != "") {
+            return true
+        }
+        
+        if let user = UserDefaults.standard.string(forKey: "loggedInUserID"),
+           !user.isEmpty,
+           let username = UserDefaults.standard.string(forKey: "loggedInUsername"),
+           !username.isEmpty {
+            
+            currentUser = ObjectId(user)
+            currentUsername = username
+            
+            return true
+        }
+        return false
+    }
+    
     // function to fetch incoming requests every x seconds
     func startFetchConnectionRequest() {
         // schedule a timer to fetch every 1 minute
@@ -395,7 +414,7 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
                     }
                     else{
                         print("fetching connection requests")
-                        print("current user", self.currentUser?.hexString)
+                        //print("current user", self.currentUser?.hexString)
                         let cRequests = try await self.mongoTest.getConnectionRequest(userId: self.currentUser!)
                         
                         // get all pending connection requests
@@ -407,11 +426,12 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
                                 let alert = UIAlertController(title: "New Connection Request", message: cnRequestMessage , preferredStyle: .alert)
                                 
                                 alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { _ in
-                                    // handle when user cancels connection request
+                                    // TODO: handle when user cancels connection request
+                                
                                 }))
                                 
                                 alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { _ in
-                                    // handle when user confirms connection request
+                                    // TODO: handle when user confirms connection request
                                     
                                     // get the old user
                                     Task {
