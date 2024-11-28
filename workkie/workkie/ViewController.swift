@@ -18,16 +18,14 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     let refreshControl = UIRefreshControl()
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return theData.count
         return tableData.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
-//        cell.textLabel!.text = theData[indexPath.row].name
-//        cell.imageView?.image = theImageCache[indexPath.row]
+
         let post = tableData[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
+        let id = post._id
         cell.postAuthor.text = post.author
         cell.postContent.text = post.content
         let currentDate = Date()
@@ -66,6 +64,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 
                 // Pass data to DetailedViewController
                 let post = tableData[indexPath.row]
+                detailedVC.id = post._id
                 detailedVC.author = post.author
                 detailedVC.postTitle = post.title
                 detailedVC.content = post.content

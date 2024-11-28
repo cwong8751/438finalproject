@@ -6,9 +6,13 @@
 //
 
 import UIKit
+import MongoKitten
+import MongoCore
+import BSON
 
 class DetailedViewController: UIViewController {
     
+    var id: ObjectId!
     var author: String!
     var postTitle: String!
     var content: String!
