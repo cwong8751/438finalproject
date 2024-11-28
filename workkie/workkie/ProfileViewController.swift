@@ -162,19 +162,10 @@ class ProfileViewController: UIViewController {
             tabBarController.selectedIndex = 1
         }
         
-        
-        // simulate a restart so userdefaults gets cleared
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        if let loginViewController = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? LoginViewController {
-            let window = UIApplication.shared.windows.first
-            window?.rootViewController = loginViewController
-            window?.makeKeyAndVisible()
-        }
-        
         // jump to login screen
-//        if let loginViewController = storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController {
-//            self.present(loginViewController, animated: true, completion: nil)
-//        }
+        if let loginViewController = storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController {
+            self.present(loginViewController, animated: true, completion: nil)
+        }
     }
     
     func updateUserInfo(field: String, value: String) {

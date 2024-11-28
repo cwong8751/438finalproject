@@ -471,7 +471,10 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
                                                 // creates a new user to replace the old one, remove the existing connection request
                                                 try await self.mongoTest.updateUser(newUser: newUser)
                                                 
-                                                
+                                                // show success alert
+                                                let alert = UIAlertController(title: "Connected!", message: "You are connections with " + rq.fromUsername, preferredStyle: .alert)
+                                                alert.addAction(UIAlertAction(title: "OK", style: .default))
+                                                self.present(alert, animated: true)
                                             }
                                         }
                                         catch {
