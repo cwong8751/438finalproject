@@ -17,6 +17,7 @@ class DetailedViewController: UIViewController {
     var postTitle: String!
     var content: String!
     var date: String!
+    var comments: [Object]
 
     @IBOutlet weak var authorvc: UILabel!
     
