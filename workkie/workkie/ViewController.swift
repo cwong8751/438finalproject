@@ -134,6 +134,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
 //    Next 5 lines are from https://www.youtube.com/watch?v=q7l9H9PVnr4
     @IBAction func postButtonPressed(_ sender: Any) {
+//        let detailedVC = SecondViewController()
+//        navigationController?.pushViewController(detailedVC, animated: true)
         let secondController = self.storyboard!.instantiateViewController(withIdentifier: "post_controller") as! SecondViewController
         secondController.loadViewIfNeeded()
         self.present(secondController, animated: true, completion: nil)
