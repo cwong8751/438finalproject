@@ -10,7 +10,7 @@ import MongoCore
 import MongoKitten
 
 class MongoTest {
-    private var database: MongoDatabase?
+    var database: MongoDatabase?
     
     // establish connection
     func connect(uri: String) async throws -> MongoDatabase {
@@ -153,7 +153,7 @@ class MongoTest {
             
             var posts: [Post] = []
             let decoder = BSONDecoder()
-            
+           
             // go over every post
             for try await document in postsCursor {
                 // decode to post interface
