@@ -79,9 +79,6 @@ class LoginViewController: UIViewController {
                         } else {
                             print("Incorrect email or password.")
                         }
-                        else{
-                            print("User is not logged in")
-                        }
                     }
                     catch {
                         print(error)
