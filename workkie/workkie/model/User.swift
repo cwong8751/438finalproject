@@ -46,6 +46,8 @@ class User: Codable {
         self.degree = nil
         self.connectionRequests = []
         self.connections = []
+        self.avatar = nil
+        self.email = nil
     }
     
     init(id: ObjectId, username: String, password: String, latitude: Double?, longitude: Double?) {
@@ -58,6 +60,8 @@ class User: Codable {
         self.degree = nil
         self.connectionRequests = []
         self.connections = []
+        self.avatar = nil
+        self.email = nil
     }
     
     init(id: ObjectId, username: String, password: String, latitude: Double?, longitude: Double?, connectionRequests: [ConnectionRequest]) {
@@ -68,6 +72,8 @@ class User: Codable {
         self.longitude = longitude
         self.connectionRequests = connectionRequests
         self.connections = []
+        self.avatar = nil
+        self.email = nil
     }
     
     init(id: ObjectId, username: String, password: String, latitude: Double?, longitude: Double?, connectionRequests: [ConnectionRequest], connections: [Connection]) {
@@ -78,6 +84,8 @@ class User: Codable {
         self.longitude = longitude
         self.connectionRequests = connectionRequests
         self.connections = connections
+        self.avatar = nil
+        self.email = nil
     }
     
     init(id: ObjectId, username: String, password: String, latitude: Double, longitude: Double, education: String, degree: String, connectionRequests: [ConnectionRequest], connections: [Connection]) {
@@ -90,6 +98,8 @@ class User: Codable {
         self.latitude = latitude
         self.connections = connections
         self.connectionRequests = connectionRequests
+        self.avatar = nil
+        self.email = nil
     }
     
     func toDocument() -> Document {
@@ -101,11 +111,16 @@ class User: Codable {
             "latitude": latitude ?? 0,
             "longitude": longitude ?? 0,
             "education": education ?? "N/A",
-            "degree": degree ?? "N/A"
+            "degree": degree ?? "N/A",
+            "email": email ?? "",
         ]
         
         if let id = _id {
             document["_id"] = id
+        }
+        
+        if let avatar = avatar {
+            document["avatar"] = avatar
         }
         
         return document

@@ -49,12 +49,10 @@ class LoginViewController: UIViewController {
         // i removed the previous code body of your authenticateUser function and replaced it with this one.
         Task {
             do{
-                let loginResponse = try await dbManager.loginUser(username: username, password: password)
+                let loginResponse = try await self.dbManager.loginUser(username: username, password: password)
                 
                 if(loginResponse){
                     print("User is logged in!")
-                    UserDefaults.standard.set(userID.hexString, forKey: "loggedInUserID")
-                    UserDefaults.standard.set(username, forKey: "loggedInUsername")
                 }
                 else{
                     print("User is not logged in")

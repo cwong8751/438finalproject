@@ -163,6 +163,10 @@ class MongoTest {
                 // compare both passwords, not the hash ones right now because it is just testing
                 if gotUser.password == password {
                     print("log in user \(username) ok")
+                    
+                    // put username and id into userdefaults
+                    UserDefaults.standard.set(gotUser._id, forKey: "loggedInUserID")
+                    UserDefaults.standard.set(gotUser.username, forKey: "loggedInUsername")
                     return true
                 }
                 else{
