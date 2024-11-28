@@ -50,7 +50,7 @@ class ProfileViewController: UIViewController {
         if isLoggedIn() {
             
             // TODO: also get education, degree label from database
-            
+            UserDefaults.standard.synchronize()
             self.username.text = UserDefaults.standard.string(forKey: "loggedInUsername")
         }
         else{
@@ -60,6 +60,23 @@ class ProfileViewController: UIViewController {
             }
         }
     }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        if isLoggedIn() {
+            // TODO: also get education, degree label from database
+            UserDefaults.standard.synchronize()
+            self.username.text = UserDefaults.standard.string(forKey: "loggedInUsername")
+        }
+        else{
+            // trigger login screen
+            if let loginVC = storyboard?.instantiateViewController(withIdentifier: "LoginViewController") {
+                present(loginVC, animated: true, completion: nil)
+            }
+        }
+    }
+    
+    
     func getUsers() async -> [User]? {
         guard let database = database else {
             print("Database is not connected.")
@@ -118,7 +135,7 @@ class ProfileViewController: UIViewController {
         }))
         present(alert, animated: true)
     }
-
+    
     @IBAction func editDegree(_ sender: UIButton) {
         let alert = UIAlertController(title: "Edit Degree", message: "Enter new degree", preferredStyle: .alert)
         alert.addTextField { textField in
@@ -133,29 +150,33 @@ class ProfileViewController: UIViewController {
         }))
         present(alert, animated: true)
     }
-
+    
     @IBAction func logoutTapped(_ sender: UIButton) {
-        if let loggedInUserID = UserDefaults.standard.string(forKey: "loggedInUserID") {
-            UserDefaults.standard.removeObject(forKey: "loggedInUserID")
-            UserDefaults.standard.removeObject(forKey: "loggedInUsername")
-            print("User \(loggedInUserID) logged out successfully.")
-            
-            // reset selected tab to center
-            if let tabBarController = self.tabBarController {
-                tabBarController.selectedIndex = 1
-            }
-            
-            // jump to login screen
-            if let loginViewController = storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController {
-                self.present(loginViewController, animated: true, completion: nil)
-            }
-        } else {
-            let alert = UIAlertController(title: "Error", message: "No user is currently logged in.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            present(alert, animated: true)
+        UserDefaults.standard.removeObject(forKey: "loggedInUserID")
+        UserDefaults.standard.removeObject(forKey: "loggedInUsername")
+        UserDefaults.standard.synchronize()
+        print("User logged out successfully.")
+        
+        // reset selected tab to center
+        if let tabBarController = self.tabBarController {
+            tabBarController.selectedIndex = 1
         }
+        
+        
+        // simulate a restart so userdefaults gets cleared
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        if let loginViewController = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? LoginViewController {
+            let window = UIApplication.shared.windows.first
+            window?.rootViewController = loginViewController
+            window?.makeKeyAndVisible()
+        }
+        
+        // jump to login screen
+//        if let loginViewController = storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController {
+//            self.present(loginViewController, animated: true, completion: nil)
+//        }
     }
-
+    
     func updateUserInfo(field: String, value: String) {
         guard let database = database, let userID = getUserID() else {
             print("Database not connected or user not logged in.")
@@ -180,7 +201,7 @@ class ProfileViewController: UIViewController {
             }
         }
     }
-
+    
     func getUserID() -> String? {
         return UserDefaults.standard.string(forKey: "loggedInUserID")
     }

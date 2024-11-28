@@ -366,7 +366,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="gi8-uk-B9J">
             <objects>
-                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="jgD-A6-GP3" customClass="TabBarController" customModule="workkie" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="TabBarController" automaticallyAdjustsScrollViewInsets="NO" id="jgD-A6-GP3" customClass="TabBarController" customModule="workkie" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="t6N-dp-lcK">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>

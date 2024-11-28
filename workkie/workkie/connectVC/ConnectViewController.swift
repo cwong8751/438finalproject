@@ -75,7 +75,30 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
         // start fetching connection requests
         startFetchConnectionRequest()
     }
-
+    
+    override func viewWillAppear(_ animated: Bool) {
+        // Check whether to use real MongoDB data or pseudo data
+        if useRealData {
+            connectToMongoDB()
+        } else {
+            loadPseudoData()
+        }
+        
+        
+        // Setup map view
+        setupMapView()
+        
+        // send user current coordinates to mongo db so others can see
+        Task {
+            do {
+                await setUserCoordinates()
+            }
+        }
+        
+        // start fetching connection requests
+        startFetchConnectionRequest()
+    }
+    
     private func setUserCoordinates() async {
         
         // get user's latitude and longitude and update it to mongo
@@ -329,18 +352,6 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    
-    // MARK: - UISearchBarDelegate Methods
-    //     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-    //         if searchText.isEmpty {
-    //             filteredProfiles = profiles
-    //         } else {
-    //             filteredProfiles = profiles.filter { user in
-    //                 user.username.lowercased().contains(searchText.lowercased())
-    //             }
-    //         }
-    //         tableView.reloadData()
-    //     }
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
             filteredProfiles = profiles
@@ -386,11 +397,6 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
     // function to check if the user is actually logged in
     func isLoggedIn() -> Bool {
         
-        // check local view controller first for faster results
-        if (currentUser?.hexString != nil && currentUser?.hexString != "") && (currentUsername != nil && currentUsername != "") {
-            return true
-        }
-        
         if let user = UserDefaults.standard.string(forKey: "loggedInUserID"),
            !user.isEmpty,
            let username = UserDefaults.standard.string(forKey: "loggedInUsername"),
@@ -431,7 +437,7 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
                                 
                                 alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { _ in
                                     // TODO: handle when user cancels connection request
-                                
+                                    
                                 }))
                                 
                                 alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { _ in
@@ -458,12 +464,14 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
                                                     password: gUser.password,
                                                     latitude: gUser.latitude,
                                                     longitude: gUser.longitude,
-                                                    connectionRequests: [], // Assuming requests are cleared
+                                                    connectionRequests: [], // clear all connection requests
                                                     connections: updatedConnections
                                                 )
                                                 
                                                 // creates a new user to replace the old one, remove the existing connection request
                                                 try await self.mongoTest.updateUser(newUser: newUser)
+                                                
+                                                
                                             }
                                         }
                                         catch {
