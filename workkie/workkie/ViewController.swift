@@ -74,9 +74,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 detailedVC.date = dateFormatter.string(from: post.date ?? Date())
                 
                 navigationController?.pushViewController(detailedVC, animated: true)
-            }
+        }
 
-    }
     
     func setupTableView() {
         tableView.dataSource = self
