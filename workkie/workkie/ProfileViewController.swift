@@ -119,7 +119,17 @@ class ProfileViewController: UIViewController {
         present(alert, animated: true)
     }
 
-    
+    @IBAction func logoutTapped(_ sender: UIButton) {
+        // Remove the user's session data
+        UserDefaults.standard.removeObject(forKey: "loggedInUserID")
+        print("User logged out successfully.")
+        
+        // Navigate back to the login screen
+        if let loginViewController = storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController {
+            loginViewController.modalPresentationStyle = .fullScreen
+            self.present(loginViewController, animated: true, completion: nil)
+        }
+    }
     func updateUserInfo(field: String, value: String) {
         guard let database = database, let userID = getUserID() else {
             print("Database not connected or user not logged in.")

@@ -15,12 +15,24 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
     
+    let dbManager = MongoTest()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         loginButton.layer.cornerRadius = 8
         let uri = "mongodb+srv://chengli:Luncy1234567890@users.at6lb.mongodb.net/users?authSource=admin&appName=Users"
         
-        connectToDatabase(uri: uri)
+        // connect to db
+        // I did the same things as register, removed your connect functions and replaced it with this.
+        Task{
+            do{
+                database = try await dbManager.connect(uri: uri)
+            }
+            catch {
+                print(error)
+            }
+        }
+        
     }
     
     @IBAction func loginButtonTapped(_ sender: UIButton) {
@@ -31,48 +43,23 @@ class LoginViewController: UIViewController {
         
         authenticateUser(username: username, password: password)
     }
-    func connect(uri: String) async throws -> MongoDatabase {
-        database = try await MongoDatabase.connect(to: uri)
-        return database!
-    }
-    private func connectToDatabase(uri: String) {
-        Task {
-            do {
-                // Connect using the existing connect function
-                try await connect(uri: uri)
-                print("Connected to MongoDB successfully.")
-            } catch {
-                print("Failed to connect to MongoDB: \(error)")
-            }
-        }
-    }
+   
     func authenticateUser(username: String, password: String) {
+        
+        // i removed the previous code body of your authenticateUser function and replaced it with this one.
         Task {
-            // Ensure the database is connected
-            guard let database = database else {
-                print("Database is not connected.")
-                return
-            }
-            
-            let collection = database["users"]
-            
-            let filter: Document = ["username": username, "password": password]
-            
-            do {
-                if let userDocument = try await collection.findOne(filter) {
-                    print("User logged in successfully.")
-                    
-                    if let userID = userDocument["_id"] as? ObjectId {
-                        UserDefaults.standard.set(userID.hexString, forKey: "loggedInUserID")
-                        // self.performSegue(withIdentifier: "showProfile", sender: self)
-                    } else {
-                        print("User ID not found in document.")
-                    }
-                } else {
-                    print("Incorrect email or password.")
+            do{
+                let loginResponse = try await dbManager.loginUser(username: username, password: password)
+                
+                if(loginResponse){
+                    print("User is logged in!")
                 }
-            } catch {
-                print("Authentication failed: \(error)")
+                else{
+                    print("User is not logged in")
+                }
+            }
+            catch {
+                print(error)
             }
         }
     }
