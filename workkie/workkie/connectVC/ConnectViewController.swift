@@ -173,6 +173,10 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
         if let users = await mongoTest.getUsers() {
             profiles = users
             filteredProfiles = profiles
+            
+            // update user coordinates
+            await setUserCoordinates()
+            
             DispatchQueue.main.async {
                 self.tableView.reloadData()
                 self.updateMapAnnotationsForAllUsers()  // Update map after loading data
