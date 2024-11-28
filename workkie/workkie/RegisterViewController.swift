@@ -16,6 +16,7 @@ class RegisterViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var registerButton: UIButton!
     
+    @IBOutlet weak var jumpToLoginButton: UIButton!
     
     // defined database manager
     let dbManager = MongoTest()
@@ -24,8 +25,6 @@ class RegisterViewController: UIViewController {
         super.viewDidLoad()
         registerButton.layer.cornerRadius = 8
         let uri = "mongodb+srv://chengli:Luncy1234567890@users.at6lb.mongodb.net/users?authSource=admin&appName=Users"
-        
-        // I removed the methods you defined to connect to the database and replaced it with these instead, so its easier to work with.
         
         // connect to database
         Task{
@@ -36,6 +35,11 @@ class RegisterViewController: UIViewController {
                 print("Failed to connect to MongoDB: \(error)")
             }
         }
+    }
+    
+    
+    @IBAction func jumpToLoginButtonPressed(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
     }
     
     @IBAction func registerButtonTapped(_ sender: UIButton) {
@@ -66,12 +70,16 @@ class RegisterViewController: UIViewController {
                     print("Email is already registered.")
                     return
                 }
-                
-                // rewrote your original insert user function to use the User class and the method in MongoTest
+            
                 // insert new user
                 let newUser = User(username: username, password: password, email: email)
                 try await dbManager.insertUser(user: newUser)
                 
+                
+                // after user registered show success alert
+                let alert = UIAlertController(title: "Registration Successful", message: "You have registered!", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {_ in self.dismiss(animated: true, completion: nil)}))
+                self.present(alert, animated: true)
             }
             catch{
                 print(error)

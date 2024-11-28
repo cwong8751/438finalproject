@@ -14,6 +14,7 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
+    @IBOutlet weak var jumpToRegisterButton: UIButton!
     
     let dbManager = MongoTest()
     
@@ -43,16 +44,23 @@ class LoginViewController: UIViewController {
         
         authenticateUser(username: username, password: password)
     }
-   
+    
+    
+    @IBAction func jumpToRegisterButtonTapped(_ sender: Any) {
+        if let registerVC = storyboard?.instantiateViewController(withIdentifier: "RegisterViewController") {
+            present(registerVC, animated: true, completion: nil)
+        }
+    }
+    
     func authenticateUser(username: String, password: String) {
         
-        // i removed the previous code body of your authenticateUser function and replaced it with this one.
         Task {
             do{
                 let loginResponse = try await self.dbManager.loginUser(username: username, password: password)
                 
                 if(loginResponse){
                     print("User is logged in!")
+                    dismiss(animated: true, completion: nil)
                 }
                 else{
                     print("User is not logged in")
@@ -63,5 +71,5 @@ class LoginViewController: UIViewController {
             }
         }
     }
-
+    
 }
