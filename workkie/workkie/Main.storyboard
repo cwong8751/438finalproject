@@ -325,7 +325,7 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Log Out"/>
                                 <connections>
-                                    <action selector="logoutTapped:" destination="Ke8-y3-2Mx" eventType="touchUpInside" id="gFk-ga-mkh"/>
+                                    <action selector="logoutTapped:" destination="Ke8-y3-2Mx" eventType="touchUpInside" id="hGW-dX-zFV"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ccc-tS-YnL">
@@ -482,16 +482,16 @@
     </scenes>
     <resources>
         <image name="person" catalog="system" width="128" height="121"/>
-        <image name="person.2.fill" catalog="system" width="32" height="32"/>
-        <image name="person.badge.plus" catalog="system" width="32" height="32"/>
+        <image name="person.2.fill" catalog="system" width="128" height="86"/>
+        <image name="person.badge.plus" catalog="system" width="128" height="124"/>
         <image name="person.crop.circle.fill" catalog="system" width="128" height="123"/>
-        <image name="person.line.dotted.person" catalog="system" width="32" height="32"/>
-        <image name="rectangle.connected.to.line.below" catalog="system" width="32" height="32"/>
+        <image name="person.line.dotted.person" catalog="system" width="128" height="59"/>
+        <image name="rectangle.connected.to.line.below" catalog="system" width="121" height="128"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="tableCellBlueTextColor">
-            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
