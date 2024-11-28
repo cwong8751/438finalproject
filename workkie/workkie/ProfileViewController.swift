@@ -22,6 +22,7 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var educationButton: UIButton!
     @IBOutlet weak var degreeButton: UIButton!
     
+    let dbManager = MongoTest()
     
     func connect(uri: String) async throws -> MongoDatabase {
         database = try await MongoDatabase.connect(to: uri)
@@ -44,6 +45,20 @@ class ProfileViewController: UIViewController {
         let uri = "mongodb+srv://chengli:Luncy1234567890@users.at6lb.mongodb.net/users?authSource=admin&appName=Users"
         
         connectToDatabase(uri: uri)
+        
+        // set the username, education and degree labels
+        if isLoggedIn() {
+            
+            // TODO: also get education, degree label from database
+            
+            self.username.text = UserDefaults.standard.string(forKey: "loggedInUsername")
+        }
+        else{
+            // trigger login screen
+            if let loginVC = storyboard?.instantiateViewController(withIdentifier: "LoginViewController") {
+                present(loginVC, animated: true, completion: nil)
+            }
+        }
     }
     func getUsers() async -> [User]? {
         guard let database = database else {
@@ -122,9 +137,16 @@ class ProfileViewController: UIViewController {
     @IBAction func logoutTapped(_ sender: UIButton) {
         if let loggedInUserID = UserDefaults.standard.string(forKey: "loggedInUserID") {
             UserDefaults.standard.removeObject(forKey: "loggedInUserID")
+            UserDefaults.standard.removeObject(forKey: "loggedInUsername")
             print("User \(loggedInUserID) logged out successfully.")
+            
+            // reset selected tab to center
+            if let tabBarController = self.tabBarController {
+                tabBarController.selectedIndex = 1
+            }
+            
+            // jump to login screen
             if let loginViewController = storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController {
-                loginViewController.modalPresentationStyle = .fullScreen
                 self.present(loginViewController, animated: true, completion: nil)
             }
         } else {
@@ -163,5 +185,16 @@ class ProfileViewController: UIViewController {
         return UserDefaults.standard.string(forKey: "loggedInUserID")
     }
     
+    func isLoggedIn() -> Bool {
+        
+        if let user = UserDefaults.standard.string(forKey: "loggedInUserID"),
+           !user.isEmpty,
+           let username = UserDefaults.standard.string(forKey: "loggedInUsername"),
+           !username.isEmpty {
+            
+            return true
+        }
+        return false
+    }
 }
 

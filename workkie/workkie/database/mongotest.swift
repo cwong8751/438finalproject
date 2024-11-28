@@ -70,10 +70,10 @@ class MongoTest {
             }
             
             // debug
-//            print("Retrieved Users:")
-//            for user in users {
-//                print("Username: \(user.username), Password: \(user.password)")
-//            }
+            //            print("Retrieved Users:")
+            //            for user in users {
+            //                print("Username: \(user.username), Password: \(user.password)")
+            //            }
             
             return users
         } catch {
@@ -120,6 +120,8 @@ class MongoTest {
                 // compare both passwords, not the hash ones right now because it is just testing
                 if gotUser.password == password {
                     print("log in user \(username) ok")
+                    UserDefaults.standard.set(gotUser._id?.hexString, forKey: "loggedInUserID")
+                    UserDefaults.standard.set(gotUser.username, forKey: "loggedInUsername")
                     return true
                 }
                 else{
@@ -253,6 +255,6 @@ class MongoTest {
     }
     
     // function to edit post
-    //TODO: 
+    //TODO:
 }
 
