@@ -43,7 +43,7 @@ class LoginViewController: UIViewController {
         
         authenticateUser(username: username, password: password)
     }
-   
+    
     func authenticateUser(username: String, password: String) {
         
         // i removed the previous code body of your authenticateUser function and replaced it with this one.
@@ -53,40 +53,42 @@ class LoginViewController: UIViewController {
                 
                 if(loginResponse){
                     print("User is logged in!")
-            // Ensure the database is connected
-            guard let database = database else {
-                print("Database is not connected.")
-                return
-            }
-            
-            let collection = database["users"]
-            
-            let filter: Document = ["username": username, "password": password]
-            
-            do {
-                if let userDocument = try await collection.findOne(filter) {
-                    print("User logged in successfully.")
-//                    Next 2 lines are from https://www.hackingwithswift.com/read/12/2/reading-and-writing-basics-userdefaults
-                    let defaults = UserDefaults.standard
-                    defaults.set(username, forKey: "username")
-                    
-                    if let userID = userDocument["_id"] as? ObjectId {
-                        UserDefaults.standard.set(userID.hexString, forKey: "loggedInUserID")
-                        // self.performSegue(withIdentifier: "showProfile", sender: self)
-                    } else {
-                        print("User ID not found in document.")
+                    // Ensure the database is connected
+                    guard let database = database else {
+                        print("Database is not connected.")
+                        return
                     }
-                } else {
-                    print("Incorrect email or password.")
-                }
-                else{
-                    print("User is not logged in")
+                    
+                    let collection = database["users"]
+                    
+                    let filter: Document = ["username": username, "password": password]
+                    
+                    do {
+                        if let userDocument = try await collection.findOne(filter) {
+                            print("User logged in successfully.")
+                            //                    Next 2 lines are from https://www.hackingwithswift.com/read/12/2/reading-and-writing-basics-userdefaults
+                            let defaults = UserDefaults.standard
+                            defaults.set(username, forKey: "username")
+                            
+                            if let userID = userDocument["_id"] as? ObjectId {
+                                UserDefaults.standard.set(userID.hexString, forKey: "loggedInUserID")
+                                // self.performSegue(withIdentifier: "showProfile", sender: self)
+                            } else {
+                                print("User ID not found in document.")
+                            }
+                        } else {
+                            print("Incorrect email or password.")
+                        }
+                        else{
+                            print("User is not logged in")
+                        }
+                    }
+                    catch {
+                        print(error)
+                    }
                 }
             }
-            catch {
-                print(error)
-            }
+            
         }
     }
-
 }
