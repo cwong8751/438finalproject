@@ -16,29 +16,26 @@ class RegisterViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var registerButton: UIButton!
     
+    
+    // defined database manager
     let dbManager = MongoTest()
     
-    func connect(uri: String) async throws -> MongoDatabase {
-        database = try await MongoDatabase.connect(to: uri)
-        return database!
-    }
-    private func connectToDatabase(uri: String) {
-        Task {
-            do {
-                // Connect using the existing connect function
-                try await connect(uri: uri)
-                print("Connected to MongoDB successfully.")
-            } catch {
-                print("Failed to connect to MongoDB: \(error)")
-            }
-        }
-    }
     override func viewDidLoad() {
         super.viewDidLoad()
         registerButton.layer.cornerRadius = 8
         let uri = "mongodb+srv://chengli:Luncy1234567890@users.at6lb.mongodb.net/users?authSource=admin&appName=Users"
         
-        connectToDatabase(uri: uri)
+        // I removed the methods you defined to connect to the database and replaced it with these instead, so its easier to work with.
+        
+        // connect to database
+        Task{
+            do{
+                database = try await dbManager.connect(uri: uri) // still kept your original structure
+            }
+            catch {
+                print("Failed to connect to MongoDB: \(error)")
+            }
+        }
     }
     
     @IBAction func registerButtonTapped(_ sender: UIButton) {
@@ -51,8 +48,11 @@ class RegisterViewController: UIViewController {
     }
     
     func registerUser(email: String, username: String, password: String) {
+        
         Task {
-            do {
+            do{
+                
+                // i kept your checking for duplicate users
                 guard let database = database else {
                     print("Database is not connected.")
                     return
@@ -60,22 +60,21 @@ class RegisterViewController: UIViewController {
                 
                 let collection = database["users"]
                 
-                // Check if a user with the same email already exists
+                // check user with same email already exists
                 let existingUser = try await collection.findOne(["email": email])
                 if existingUser != nil {
                     print("Email is already registered.")
                     return
                 }
                 
-                let newUser = User(username: username, password: password)
-                
-                try await dbManager.connect(uri: "mongodb+srv://chengli:Luncy1234567890@users.at6lb.mongodb.net/users?authSource=admin&appName=Users")
+                // rewrote your original insert user function to use the User class and the method in MongoTest
+                // insert new user
+                let newUser = User(username: username, password: password, email: email)
                 try await dbManager.insertUser(user: newUser)
-                print("User registered successfully.")
                 
-                // e.g., self.performSegue(withIdentifier: "showLogin", sender: self)
-            } catch {
-                print("Registration failed: \(error)")
+            }
+            catch{
+                print(error)
             }
         }
     }

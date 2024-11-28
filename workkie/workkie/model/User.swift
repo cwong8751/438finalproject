@@ -18,8 +18,11 @@ class User: Codable {
     var degree: String?
     var connectionRequests: [ConnectionRequest]?
     var connections: [Connection]?
+    var avatar: Data?
+    var email: String?
     
-    init(username: String, password: String) {
+    // basic init function, avatar is optional, don't have to specify avatar when creating new user obj
+    init(username: String, password: String, avatar: Data? = nil, email: String) {
         self.username = username
         self.password = password
         self._id = nil // let mongo set it for us
@@ -29,6 +32,8 @@ class User: Codable {
         self.degree = nil
         self.connectionRequests = []
         self.connections = []
+        self.avatar = nil
+        self.email = email
     }
     
     init(username: String, password: String, latitude: Double?, longitude: Double?) {

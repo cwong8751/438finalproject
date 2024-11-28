@@ -117,8 +117,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 
 
 //                Creating a new user
-//                let user = User(username: "", password: "")
-//               try await self.dbManager.insertUser(user: user)
+//                let user = User(username: "", password: "", ema)
+//                try await self.dbManager.insertUser(user: user)
                 
                 
             }

@@ -15,6 +15,7 @@ class Post: Codable {
     var date: Date
     var title: String
     var comments: [String]
+    var upvotes: Int
     
     // init function
     init(author: String, content: String, date: Date, title: String, comments: [String]) {
@@ -25,5 +26,6 @@ class Post: Codable {
         self.date = date
         self.title = title
         self.comments = comments
+        self.upvotes = 0 // default number of upvotes is 0
     }
 }
