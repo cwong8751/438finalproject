@@ -10,7 +10,22 @@ import MongoKitten
 import MongoCore
 import BSON
 
-class DetailedViewController: UIViewController {
+class DetailedViewController: UIViewController, UITableViewDataSource {
+    
+    @IBOutlet weak var tableView: UITableView!
+    
+    var theData: [String] = []
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        <#code#>
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        <#code#>
+    }
+    
+    
+    let dbManager = MongoTest()
     
     var id: ObjectId!
     var author: String!
@@ -38,14 +53,18 @@ class DetailedViewController: UIViewController {
         datevc?.text = date
         contentvc?.text = content
         
+        setupTableView()
+        fetchDataForTableView()
+        
     }
     
     func setupTableView() {
-        
+        tableView.dataSource = self
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
     }
     
     func fetchDataForTableView() {
-        
+        let theData = comments
     }
     
     @IBAction func commentPressed(_ sender: Any) {
