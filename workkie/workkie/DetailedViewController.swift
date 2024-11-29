@@ -116,19 +116,28 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
 //        tableView.reloadData()
         Task {
             do {
-                // Simulated fetch (Replace this with your actual MongoDB query)
                 let uri = "mongodb+srv://chengli:Luncy1234567890@users.at6lb.mongodb.net/users?authSource=admin&appName=Users"
                 try await dbManager.connect(uri: uri)
 
                 if let fetchedComments = try await dbManager.getAllComments(forPostId: id) {
                     comments = fetchedComments
+                    DispatchQueue.main.async {
+                        self.comments = fetchedComments
+                        self.tableView.reloadData()
+                        self.refreshControl.endRefreshing()
+                    }
                 }
                 
-                tableView.reloadData()
-                refreshControl.endRefreshing() // Stop refresh animation
+//                tableView.reloadData()
+//                refreshControl.endRefreshing()
             } catch {
-                print("Failed to fetch comments: \(error)")
-                refreshControl.endRefreshing() // Stop refresh even on failure
+                DispatchQueue.main.async {
+                    print("Failed to fetch comments: \(error)")
+                    self.refreshControl.endRefreshing()
+                }
+            }
+            DispatchQueue.main.async {
+                self.refreshControl.endRefreshing()
             }
         }
     }
