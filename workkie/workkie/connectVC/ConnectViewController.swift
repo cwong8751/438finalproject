@@ -18,6 +18,7 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
     @IBOutlet var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var connectionButton: UIButton!
     
     // MARK: - Properties
     var profiles: [User] = []
@@ -248,6 +249,16 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         return cell
     }
+    
+    
+    @IBAction func connectionButtonPressed(_ sender: Any) {
+        let connectionViewController = storyboard?.instantiateViewController(withIdentifier: "connectionViewController") as! ConnectionViewController
+        connectionViewController.title = "My Connections"
+        
+        let navController = UINavigationController(rootViewController: connectionViewController)
+        self.present(navController, animated: true, completion: nil)
+    }
+    
     
     @objc func connectButtonTapped(_ sender: UIButton) {
         let selectedIndex = sender.tag
