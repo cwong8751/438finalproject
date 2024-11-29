@@ -14,6 +14,8 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
     
     @IBOutlet weak var tableView: UITableView!
     
+    let refreshControl = UIRefreshControl()
+    
 //    var theData: [String] = []
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -64,8 +66,12 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
         titlevc?.text = postTitle
         datevc?.text = date
         contentvc?.text = content
+        contentvc?.textAlignment = .left
+        contentvc?.numberOfLines = 0
+        contentvc?.lineBreakMode = .byWordWrapping
         
         setupTableView()
+        setupRefreshControl()
         fetchDataForTableView()
     }
     
@@ -74,9 +80,35 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
     }
     
+    func setupRefreshControl() {
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+        tableView.refreshControl = refreshControl
+    }
+    
+    @objc func refreshData() {
+        fetchDataForTableView()
+    }
+    
     func fetchDataForTableView() {
-        let theData = comments
-        tableView.reloadData()
+//        let theData = comments
+//        tableView.reloadData()
+        Task {
+            do {
+                // Simulated fetch (Replace this with your actual MongoDB query)
+                let uri = "mongodb+srv://chengli:Luncy1234567890@users.at6lb.mongodb.net/users?authSource=admin&appName=Users"
+                try await dbManager.connect(uri: uri)
+
+                if let fetchedComments = try await dbManager.getAllComments(forPostId: id) {
+                    comments = fetchedComments
+                }
+                
+                tableView.reloadData()
+                refreshControl.endRefreshing() // Stop refresh animation
+            } catch {
+                print("Failed to fetch comments: \(error)")
+                refreshControl.endRefreshing() // Stop refresh even on failure
+            }
+        }
     }
     
     @IBAction func commentPressed(_ sender: Any) {

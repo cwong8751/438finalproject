@@ -177,6 +177,39 @@ class MongoTest {
         }
     }
     
+    func getAllComments(forPostId postId: ObjectId) async throws -> [String]? {
+        guard let database = database else {
+            print("Database is not connected.")
+            return nil
+        }
+        
+        let collection = database["posts"]
+        
+        do {
+            // Find the post by its _id (postId) to get its comments
+            let filter: Document = ["_id": postId]
+            
+            // Fetch the post that matches the given postId
+            if let document = try await collection.findOne(filter) {
+                // Extract the comments array from the document
+                if let comments = document["comments"] as? [String] {
+                    // Return the list of comments
+                    return comments
+                } else {
+                    print("No comments found for post with _id: \(postId)")
+                    return nil
+                }
+            } else {
+                print("Post not found for _id: \(postId)")
+                return nil
+            }
+        } catch {
+            print("Failed to retrieve comments: \(error)")
+            return nil
+        }
+    }
+
+    
     // function to get specific post
     func getPost(id: ObjectId) async throws -> Post? {
         guard let database = database else {
