@@ -14,7 +14,8 @@ class Post: Codable {
     var content: String
     var date: Date
     var title: String
-    var comments: [String]
+//    var comments: [String]
+    var comments: [Object]
     var upvotes: Int?
     
     // init function

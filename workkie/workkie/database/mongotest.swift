@@ -232,6 +232,28 @@ class MongoTest {
         }
     }
     
+    func insertComment(postId: ObjectId, author: String, content: String) async throws -> Bool {
+        
+        guard let database = database else {
+            print("Database is not connected.")
+            return false
+        }
+        do {
+            print("Inserting comment")
+            let newComment: Document = ["author": author, "content": content]
+            let collection = database["posts"]
+            let filter: Document = ["_id": postId]
+            let update: Document = ["$push": ["comments": newComment]]
+            
+            let result = try await collection.updateOne(where: filter, to: update)
+            
+        }
+        catch {
+            print("Failed to insert comment")
+            return false
+        }
+    }
+    
     // function to delete post
     func deletePost(postId: ObjectId) async throws -> Bool {
         guard let database = database else {

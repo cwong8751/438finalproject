@@ -44,19 +44,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-//        let detailedVC = DetailedViewController()
-//        
-//        detailedVC.author = tableData[indexPath.row].author
-//        detailedVC.content = tableData[indexPath.row].content
-//        detailedVC.postTitle = tableData[indexPath.row].title
-//        let currentDate = Date()
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-//        let dateString = dateFormatter.string(from: currentDate)
-//        detailedVC.date = dateString
-//        
-//        navigationController?.pushViewController(detailedVC, animated: true)
-        
         guard let detailedVC = storyboard?.instantiateViewController(withIdentifier: "DetailedViewController") as? DetailedViewController else {
                     print("DetailedViewController not found in storyboard!")
                     return
@@ -71,6 +58,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
                 detailedVC.date = dateFormatter.string(from: post.date ?? Date())
+//                let defaults = UserDefaults.standard
+//                defaults.set(username, forKey: "username")
                 
                 navigationController?.pushViewController(detailedVC, animated: true)
         }
@@ -142,3 +131,15 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
 }
 
+//        let detailedVC = DetailedViewController()
+//
+//        detailedVC.author = tableData[indexPath.row].author
+//        detailedVC.content = tableData[indexPath.row].content
+//        detailedVC.postTitle = tableData[indexPath.row].title
+//        let currentDate = Date()
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+//        let dateString = dateFormatter.string(from: currentDate)
+//        detailedVC.date = dateString
+//
+//        navigationController?.pushViewController(detailedVC, animated: true)
