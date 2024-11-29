@@ -259,6 +259,7 @@ class MongoTest {
             print("insert post of author: \(post.author) title: \(post.title) ok")
             return true
         }
+        return true
         catch{
             print("failed to insert post: \(error)")
             return false
