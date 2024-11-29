@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -32,7 +33,13 @@
                             <constraint firstAttribute="width" constant="75" id="aib-DP-5Zl"/>
                         </constraints>
                         <state key="normal" title="Button"/>
-                        <buttonConfiguration key="configuration" style="gray" title="Button"/>
+                        <buttonConfiguration key="configuration" style="plain" title="Connect">
+                            <backgroundConfiguration key="background">
+                                <color key="backgroundColor" name="AccentColor"/>
+                            </backgroundConfiguration>
+                            <fontDescription key="titleFontDescription" type="system" pointSize="12"/>
+                            <color key="baseForegroundColor" systemColor="systemBackgroundColor"/>
+                        </buttonConfiguration>
                     </button>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DEb-hz-1ra">
                         <rect key="frame" x="185" y="21" width="45" height="21"/>
@@ -65,4 +72,12 @@
             <point key="canvasLocation" x="207.63358778625954" y="44.014084507042256"/>
         </tableViewCell>
     </objects>
+    <resources>
+        <namedColor name="AccentColor">
+            <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
 </document>

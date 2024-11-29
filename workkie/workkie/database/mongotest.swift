@@ -27,7 +27,7 @@ class MongoTest {
         }
         
         let collection = database["users"]
-        let insUser: Document  = ["username": user.username, "password": user.password] // make document
+        let insUser = user.toDocument()
         
         do{
             // TODO: add a error message when user tries to add duplicate username
@@ -69,16 +69,59 @@ class MongoTest {
                 }
             }
             
-            // debug
-//            print("Retrieved Users:")
-//            for user in users {
-//                print("Username: \(user.username), Password: \(user.password)")
-//            }
-            
             return users
         } catch {
             print("Failed to retrieve users: \(error)")
             return nil
+        }
+    }
+    
+    // function get single user
+    func getUser(userId: ObjectId) async throws -> User? {
+        guard let database = database else {
+            print("Database is not connected.")
+            return nil
+        }
+        
+        let collection = database["users"]
+        
+        do {
+            if let findResult = try await collection.findOne("_id" == userId) {
+                let decoder = BSONDecoder()
+                let gotUser = try decoder.decode(User.self, from: findResult)
+                print("Found user ok")
+                return gotUser
+            }
+            else{
+                return nil
+                print("Found user \(userId) fail")
+            }
+        } catch {
+            print("Found user \(userId) fail")
+            return nil
+        }
+    }
+    
+    // function to update user
+    func updateUser(newUser: User) async throws -> Bool {
+        guard let database = database else {
+            print("Database is not connected.")
+            return false
+        }
+        
+        let collection = database["users"]
+        
+        let updatedUser = newUser.toDocument()
+        
+        do {
+            let updateResult = try await collection.updateOne(where: "_id" == newUser._id, to: updatedUser)
+            print("updated user count: ", updateResult.updatedCount)
+            return true
+        }
+        catch{
+            print(error)
+            print("update user failed")
+            return false
         }
     }
     
@@ -120,6 +163,14 @@ class MongoTest {
                 // compare both passwords, not the hash ones right now because it is just testing
                 if gotUser.password == password {
                     print("log in user \(username) ok")
+                    print("log in user \(gotUser.username) ok")
+                    
+                    print(UserDefaults.standard.string(forKey: "loggedInUserID"))
+                    print(UserDefaults.standard.string(forKey: "loggedInUsername"))
+                    
+                    UserDefaults.standard.set(gotUser._id?.hexString, forKey: "loggedInUserID")
+                    UserDefaults.standard.set(gotUser.username, forKey: "loggedInUsername")
+                    UserDefaults.standard.synchronize()
                     return true
                 }
                 else{
@@ -315,7 +366,59 @@ class MongoTest {
         }
     }
     
-    // function to edit post
-    //TODO: 
+    func sendConnectionRequest(clRequest: ConnectionRequest) async throws -> Bool {
+        guard let database = database else {
+            print("Database is not connected.")
+            return false
+        }
+        
+        do{
+            // get user to send connection request to
+            let dUser = try await self.getUser(userId: clRequest.toUser)
+            
+            // modify their connection requests field
+            let dUserNew = User(id: dUser!._id!, username: dUser!.username, password: dUser!.password, latitude: dUser!.latitude, longitude: dUser!.longitude, connectionRequests: [clRequest])
+            
+            // put the user back
+            let updateResult = try await updateUser(newUser: dUserNew)
+            
+            if(updateResult) {
+                print("send connection request successful")
+                return true
+            }
+            else{
+                print("send connection request failed")
+                return false
+            }
+        }
+        catch {
+            print(error)
+            return false
+        }
+    }
+    
+    // function to get all connection requests for a specific user
+    func getConnectionRequest(userId: ObjectId) async -> [ConnectionRequest]? {
+        guard let database = database else {
+            print("Database is not connected.")
+            return nil
+        }
+        
+        do {
+            // get user
+            let gotUser = try await getUser(userId: userId)
+            
+            if let gUser = gotUser {
+                print("got connection requests success")
+                return gUser.connectionRequests ?? []
+            }
+            else{
+                print("get connection requests fail")
+                return nil
+            }
+        } catch {
+            print("get connection requests fail")
+            return nil
+        }
+    }
 }
-

@@ -6,25 +6,34 @@
 //
 
 import UIKit
-//import MongoKitten  // Ensure you have MongoKitten installed and properly configured
+import MapKit
+import BSON
 
-class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
+class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, MKMapViewDelegate {
     
-    
-    // I just fixed your code because it giving me errors when i am merging.
+    // define location manager for map
+    let locationManager = LocationManager()
     
     // MARK: - Outlets
     @IBOutlet var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var mapView: MKMapView!
     
     // MARK: - Properties
     var profiles: [User] = []
     var filteredProfiles: [User] = []
     
     let mongoTest = MongoTest()  // Instance to handle MongoDB operations
+    let useRealData = true  // Toggle between real data and pseudo data
+    var currentUser: ObjectId?
+    var currentUsername: String?
     
-    // Toggle to switch between real MongoDB data and pseudo data
-    let useRealData = false
+    // swipe down to refresh
+    let swipeRefresh = UIRefreshControl()
+    
+    // db uri
+    let dbUri = "mongodb+srv://chengli:Luncy1234567890@users.at6lb.mongodb.net/users?authSource=admin&appName=Users"
+    
     
     // MARK: - Lifecycle Methods
     override func viewDidLoad() {
@@ -34,6 +43,11 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
         tableView.delegate = self
         tableView.dataSource = self
         searchBar.delegate = self
+        mapView.delegate = self
+        
+        // configure swipe down to refresh
+        swipeRefresh.addTarget(self, action: #selector(connectToMongoDB), for: .valueChanged)
+        tableView.refreshControl = swipeRefresh
         
         // Register the custom cell nib
         tableView.register(UINib(nibName: "ProfileCell", bundle: nil), forCellReuseIdentifier: "ProfileCell")
@@ -41,105 +55,444 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
         // Adjust row height for better UI
         tableView.rowHeight = 60
         
+        // Check whether to use real MongoDB data or pseudo data
         if useRealData {
             connectToMongoDB()
         } else {
             loadPseudoData()
         }
-    }
-    
-    // MARK: - MongoDB Connection
-    func connectToMongoDB() {
+        
+        // Setup map view
+        setupMapView()
+        
+        // send user current coordinates to mongo db so others can see
         Task {
             do {
-                // Replace with your actual MongoDB URI
-                try await mongoTest.connect(uri: "mongodb+srv://chengli:Luncy1234567890@users.at6lb.mongodb.net/users?authSource=admin&appName=Users")
+                await setUserCoordinates()
+            }
+        }
+        
+        // start fetching connection requests
+        startFetchConnectionRequest()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        // Check whether to use real MongoDB data or pseudo data
+        if useRealData {
+            connectToMongoDB()
+        } else {
+            loadPseudoData()
+        }
+        
+        
+        // Setup map view
+        setupMapView()
+        
+        // send user current coordinates to mongo db so others can see
+        Task {
+            do {
+                await setUserCoordinates()
+            }
+        }
+        
+        // start fetching connection requests
+        startFetchConnectionRequest()
+    }
+    
+    private func setUserCoordinates() async {
+        
+        // get user's latitude and longitude and update it to mongo
+        
+        if isLoggedIn() {
+            print("current user: ", currentUser)
+            print("current username is: ", currentUsername)
+            print("user logged in, setting user coordinates")
+            
+            Task {
+                do{
+                    try await mongoTest.connect(uri: dbUri)
+                    let allUsers = await self.mongoTest.getUsers()
+                    
+                    if let gotUser = allUsers?.first(where: {$0._id?.hexString == currentUser?.hexString}) {
+                        
+                        // get current user coordinates
+                        let curLat = self.locationManager.userCoordinates?.latitude
+                        let curLon = self.locationManager.userCoordinates?.longitude
+                        
+                        // create new user object
+                        if let curLat = curLat, let curLon = curLon {
+                            
+                            let userWithCoord = User(id: gotUser._id!, username: gotUser.username, password: gotUser.password, latitude: curLat, longitude: curLon, education: gotUser.education ?? "N/A", degree: gotUser.degree ?? "N/A", connectionRequests: gotUser.connectionRequests ?? [], connections: gotUser.connections ?? [])
+                            
+                            let insertResult = try await mongoTest.updateUser(newUser: userWithCoord)
+                            
+                            if insertResult {
+                                print("user coordinates updated ")
+                            }
+                            else{
+                                print("update user with coordinates failed")
+                            }
+                        }
+                        else{
+                            print("get user current location failed, coordinates not set")
+                        }
+                    }
+                }
+                catch {
+                    print(error)
+                }
+            }
+        }
+        else{
+            print("user not logged in, not setting coordinates")
+            return
+        }
+    }
+    
+    // MARK: - Map View Setup
+    private func setupMapView() {
+        mapView.mapType = .standard
+        mapView.showsUserLocation = true
+        mapView.setUserTrackingMode(.follow, animated: true)
+        mapView.showsScale = true
+        locationManager.requestLocation()
+    }
+    
+    // update map annotations for all users
+    private func updateMapAnnotationsForAllUsers() {
+        // remove existing
+        mapView.removeAnnotations(mapView.annotations)
+        
+        // Add annotations for all profiles with valid latitude and longitude
+        for user in profiles {
+            guard let lat = user.latitude, let lon = user.longitude else { continue }
+            
+            // don't add annotation for the current user
+            if user._id == currentUser { continue }
+            
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+            annotation.title = user.username
+            mapView.addAnnotation(annotation)
+        }
+    }
+    
+    // set up connection
+    @objc func connectToMongoDB() {
+        Task {
+            do {
+                let client = try await mongoTest.connect(uri: dbUri)
                 
                 print("Connected to MongoDB successfully!")
-                
-                // Load data after successful connection
                 await loadUserProfiles()
             } catch {
                 print("Failed to connect to MongoDB: \(error)")
-                // Optionally, load pseudo data if real data fails
-                loadPseudoData()
             }
         }
     }
     
     // MARK: - Data Loading Methods
-    
-    /// Loads user profiles from MongoDB asynchronously
     func loadUserProfiles() async {
-        if let users = await mongoTest.getUsers() {  // Ensure getUsers() is properly implemented
+        if let users = await mongoTest.getUsers() {
             profiles = users
             filteredProfiles = profiles
+            
+            // update user coordinates
+            await setUserCoordinates()
+            
             DispatchQueue.main.async {
                 self.tableView.reloadData()
+                self.updateMapAnnotationsForAllUsers()  // Update map after loading data
+                self.swipeRefresh.endRefreshing()
             }
         } else {
             print("No users found in MongoDB.")
-            // Optionally, load pseudo data if no users are found
-            DispatchQueue.main.async {
-                self.loadPseudoData()
-            }
         }
     }
     
-    /// Loads pseudo data for demonstration purposes
     func loadPseudoData() {
         profiles = [
-            User(username: "Alice", password: "password1", email: ""),
-            User(username: "Bob", password: "password2", email: ""),
-            User(username: "Charlie", password: "password3", email: ""),
-            User(username: "Diana", password: "password4", email: ""),
-            User(username: "Eve", password: "password5", email: "")
+            User(username: "Alice", password: "password1", latitude: 37.7749, longitude: -122.4194),
+            User(username: "Bob", password: "password2", latitude: 37.7753, longitude: -122.4200),
+            User(username: "Charlie", password: "password3", latitude: 34.0522, longitude: -118.2437),
+            User(username: "Diana", password: "password4", latitude: 51.5074, longitude: -0.1278),
+            User(username: "Eve", password: "password5", latitude: 48.8566, longitude: 2.3522)
         ]
         
         filteredProfiles = profiles
         tableView.reloadData()
+        updateMapAnnotationsForAllUsers()  // update map
     }
     
     // MARK: - UITableViewDataSource Methods
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return filteredProfiles.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ProfileCell", for: indexPath) as? ProfileCell else {
-            // Return a default cell if casting fails
             return UITableViewCell()
         }
         
         // Configure the cell with user data
         let user = filteredProfiles[indexPath.row]
         cell.nameLabel?.text = user.username
-        cell.designationLabel?.text = "Software Engineer"  // Placeholder; modify as needed
-        
-        // Set the profile image (ensure "profile_img" exists in your assets)
+        cell.designationLabel?.text = user.education
         cell.profileImageView?.image = UIImage(named: "profile_img")
+        
+        
+        // Add an action for the Connect button
+        cell.connectButton.addTarget(self, action: #selector(connectButtonTapped(_:)), for: .touchUpInside)
+        cell.connectButton.tag = indexPath.row  // add tag
+        
         
         return cell
     }
     
-    // MARK: - UISearchBarDelegate Methods
+    @objc func connectButtonTapped(_ sender: UIButton) {
+        let selectedIndex = sender.tag
+        let selectedUser = filteredProfiles[selectedIndex]
+        
+        // check if user is logged in first
+        if !isLoggedIn() {
+            let alert = UIAlertController(title: "Connect Failed", message: "Log in to send a connect request", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            self.present(alert, animated: true)
+            return
+        }
+        
+        // check if the user is sending the request to himself
+        if selectedUser._id == currentUser {
+            let alert = UIAlertController(title: "Connect Failed", message: "You cannot connect with yourself", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            self.present(alert, animated: true)
+            return
+        }
+        
+        Task {
+            do {
+                
+                let clRequest = ConnectionRequest(fromUser: currentUser!, toUser: selectedUser._id!, status: "pending", date: Date(), fromUsername: currentUsername!, toUsername: selectedUser.username)
+                
+                let isRequestSent = try await mongoTest.sendConnectionRequest(clRequest: clRequest)
+                
+                DispatchQueue.main.async {
+                    if isRequestSent {
+                        
+                        let alert = UIAlertController(
+                            title: "Request Sent",
+                            message: "Connection request has been sent to \(selectedUser.username).",
+                            preferredStyle: .alert
+                        )
+                        alert.addAction(UIAlertAction(title: "OK", style: .default))
+                        self.present(alert, animated: true)
+                    } else {
+                        
+                        let alert = UIAlertController(
+                            title: "Request Failed",
+                            message: "Could not send connection request. Please try again later.",
+                            preferredStyle: .alert
+                        )
+                        alert.addAction(UIAlertAction(title: "OK", style: .default))
+                        self.present(alert, animated: true)
+                    }
+                }
+            } catch {
+                
+                DispatchQueue.main.async {
+                    let alert = UIAlertController(
+                        title: "Error",
+                        message: "An error occurred: \(error.localizedDescription)",
+                        preferredStyle: .alert
+                    )
+                    alert.addAction(UIAlertAction(title: "OK", style: .default))
+                    self.present(alert, animated: true)
+                }
+            }
+        }
+    }
+    
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // Get the selected user
+        let selectedUser = filteredProfiles[indexPath.row]
+        
+        // Ensure the user has a valid location (latitude and longitude)
+        if let latitude = selectedUser.latitude, let longitude = selectedUser.longitude {
+            // check if user's location is 0,0, 0,0 is invalid location
+            if latitude != 0.0 && longitude != 0.0 {
+                let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+                
+                // Center the map on the selected user's location
+                let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
+                mapView.setRegion(region, animated: true)
+                
+                // Remove old annotations and add a new one for the selected user
+                mapView.removeAnnotations(mapView.annotations)
+                
+                let annotation = MKPointAnnotation()
+                annotation.coordinate = coordinate
+                annotation.title = selectedUser.username
+                mapView.addAnnotation(annotation)
+            }
+            else{
+                
+                let alert = UIAlertController(title: "Location Unavailable", message: "The selected user does not have a valid location.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                present(alert, animated: true, completion: nil)
+            }
+        } else {
+            
+            let alert = UIAlertController(title: "Location Unavailable", message: "The selected user does not have a valid location.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            present(alert, animated: true, completion: nil)
+        }
+        
+        // Deselect the row after handling the tap
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        // Filter profiles based on search text
         if searchText.isEmpty {
             filteredProfiles = profiles
+            mapView.removeAnnotations(mapView.annotations)  // Clear map annotations
+            updateMapAnnotationsForAllUsers()  // Re-add all annotations
         } else {
+            // Filter profiles based on search text
             filteredProfiles = profiles.filter { user in
                 user.username.lowercased().contains(searchText.lowercased())
+            }
+            
+            // If there are filtered results, focus on the first one on the map
+            if let firstUser = filteredProfiles.first, let lat = firstUser.latitude, let lon = firstUser.longitude {
+                let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+                
+                // updates the map
+                let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
+                mapView.setRegion(region, animated: true)
+                
+                // removes old annotations and add only the matching annotations
+                mapView.removeAnnotations(mapView.annotations)
+                for user in filteredProfiles {
+                    if let lat = user.latitude, let lon = user.longitude {
+                        let annotation = MKPointAnnotation()
+                        annotation.coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+                        annotation.title = user.username
+                        mapView.addAnnotation(annotation)
+                    }
+                }
+            } else {
+                // If no results, remove annotations and reset map
+                mapView.removeAnnotations(mapView.annotations)
             }
         }
         tableView.reloadData()
     }
     
+    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        // Dismiss the keyboard when search button is clicked
         searchBar.resignFirstResponder()
+    }
+    
+    // function to check if the user is actually logged in
+    func isLoggedIn() -> Bool {
+        
+        if let user = UserDefaults.standard.string(forKey: "loggedInUserID"),
+           !user.isEmpty,
+           let username = UserDefaults.standard.string(forKey: "loggedInUsername"),
+           !username.isEmpty {
+            
+            currentUser = ObjectId(user)
+            currentUsername = username
+            
+            return true
+        }
+        return false
+    }
+    
+    // function to fetch incoming requests every x seconds
+    func startFetchConnectionRequest() {
+        // schedule a timer to fetch every 1 minute
+        
+        Timer.scheduledTimer(withTimeInterval: 60.0, repeats: true) { timer in
+            Task {
+                do {
+                    
+                    // check if user is actually logged in
+                    if self.currentUser?.hexString == nil && self.currentUsername == nil {
+                        print("user not logged in, not fetching connection requests")
+                    }
+                    else{
+                        print("fetching connection requests")
+                        //print("current user", self.currentUser?.hexString)
+                        let cRequests = try await self.mongoTest.getConnectionRequest(userId: self.currentUser!)
+                        
+                        // get all pending connection requests
+                        for rq in cRequests! {
+                            
+                            if rq.status == "pending" {
+                                let cnRequestMessage = rq.fromUsername + " wants to connect with you"
+                                // show alert
+                                let alert = UIAlertController(title: "New Connection Request", message: cnRequestMessage , preferredStyle: .alert)
+                                
+                                alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { _ in
+                                    // TODO: handle when user cancels connection request
+                                    
+                                }))
+                                
+                                alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { _ in
+                                    // TODO: handle when user confirms connection request
+                                    
+                                    // get the old user
+                                    Task {
+                                        do{
+                                            let gUser = try await self.mongoTest.getUser(userId: self.currentUser!)
+                                            
+                                            // Safely unwrap gUser
+                                            if let gUser = gUser {
+                                                // Ensure connections array is non-nil
+                                                var updatedConnections = gUser.connections ?? []
+                                                
+                                                // Create new connection and append to the array
+                                                let nConnection = Connection(username: rq.fromUsername)
+                                                updatedConnections.append(nConnection)
+                                                
+                                                // Create new user with updated connections
+                                                let newUser = User(
+                                                    id: gUser._id!,
+                                                    username: gUser.username,
+                                                    password: gUser.password,
+                                                    latitude: gUser.latitude,
+                                                    longitude: gUser.longitude,
+                                                    connectionRequests: [], // clear all connection requests
+                                                    connections: updatedConnections
+                                                )
+                                                
+                                                // creates a new user to replace the old one, remove the existing connection request
+                                                try await self.mongoTest.updateUser(newUser: newUser)
+                                                
+                                                // show success alert
+                                                let alert = UIAlertController(title: "Connected!", message: "You are connections with " + rq.fromUsername, preferredStyle: .alert)
+                                                alert.addAction(UIAlertAction(title: "OK", style: .default))
+                                                self.present(alert, animated: true)
+                                            }
+                                        }
+                                        catch {
+                                            print(error)
+                                        }
+                                    }
+                                }))
+                                
+                                self.present(alert, animated: true, completion: nil)
+                            }
+                            // else ignore the request because it is already fulfilled
+                        }
+                    }
+                }
+                catch {
+                    print(error)
+                }
+            }
+        }
     }
 }
