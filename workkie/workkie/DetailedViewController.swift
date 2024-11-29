@@ -40,6 +40,14 @@ class DetailedViewController: UIViewController {
         
     }
     
+    func setupTableView() {
+        
+    }
+    
+    func fetchDataForTableView() {
+        
+    }
+    
     @IBAction func commentPressed(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
 //        let commentview = storyboard.instantiateViewController(withIdentifier: "commentVC")
