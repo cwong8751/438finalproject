@@ -30,8 +30,6 @@ class MongoTest {
         let insUser = user.toDocument()
         
         do{
-            // TODO: add a error message when user tries to add duplicate username
-            // current state: mongo does stop adding the user because of unique index, but on swift it shows ok
             print("inserting user: \(user.username) password: \(user.password)")
             try await collection.insert(insUser)
             print("insert user: \(user.username) ok")
