@@ -29,8 +29,15 @@ class CommentViewController: UIViewController {
         Task {
             
             let defaults = UserDefaults.standard
-            let author = defaults.object(forKey: "username") as! String
+            if isLoggedIn() {
+                
+            } else {
+                return
+                dismiss(animated: true, completion: nil)
+            }
+            let author = defaults.object(forKey: "loggedInUsername") as! String
             let comment = commentText.text
+            
             
             do {
                 // Ensure the connection
@@ -50,6 +57,18 @@ class CommentViewController: UIViewController {
             
         }
         
+    }
+    
+    func isLoggedIn() -> Bool {
+        
+        if let user = UserDefaults.standard.string(forKey: "loggedInUserID"),
+           !user.isEmpty,
+           let username = UserDefaults.standard.string(forKey: "loggedInUsername"),
+           !username.isEmpty {
+            
+            return true
+        }
+        return false
     }
     
 

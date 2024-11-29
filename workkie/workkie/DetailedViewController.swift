@@ -56,6 +56,15 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if isLoggedIn() {
+        }
+        else{
+            // trigger login screen
+            if let loginVC = storyboard?.instantiateViewController(withIdentifier: "LoginViewController") {
+                present(loginVC, animated: true, completion: nil)
+            }
+        }
+        
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 44
 
@@ -74,6 +83,18 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
         setupRefreshControl()
         fetchDataForTableView()
         updateButtonVisibility()
+    }
+    
+    func isLoggedIn() -> Bool {
+        
+        if let user = UserDefaults.standard.string(forKey: "loggedInUserID"),
+           !user.isEmpty,
+           let username = UserDefaults.standard.string(forKey: "loggedInUsername"),
+           !username.isEmpty {
+            
+            return true
+        }
+        return false
     }
     
     func setupTableView() {
@@ -128,18 +149,22 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
     @IBOutlet weak var deleteButton: UIButton!
     
     func updateButtonVisibility() {
-        let defaults = UserDefaults.standard
-        let currentUser = defaults.object(forKey: "username") as! String
-        if currentUser == author {
-            deleteButton.isHidden = false
-        } else {
-            deleteButton.isHidden = true
+        deleteButton.isHidden = true
+        if isLoggedIn() {
+            let defaults = UserDefaults.standard
+            let currentUser = defaults.object(forKey: "loggedInUsername") as! String
+            if currentUser == author {
+                deleteButton.isHidden = false
+            } else {
+                deleteButton.isHidden = true
+            }
         }
+        
     }
     
     @IBAction func deletePressed(_ sender: Any) {
         let defaults = UserDefaults.standard
-        let currentUser = defaults.object(forKey: "username") as! String
+        let currentUser = defaults.object(forKey: "loggedInUsername") as! String
         if currentUser == author {
             
             Task {

@@ -110,8 +110,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     @IBOutlet weak var tableView: UITableView!
     
-    @IBOutlet weak var postBar: UITextField!
-    
     @IBOutlet weak var postButton: UIButton!
 //    Next 5 lines are from ChatGPT
     func configureRefreshControl() {

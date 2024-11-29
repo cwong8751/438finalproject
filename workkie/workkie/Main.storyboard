@@ -11,7 +11,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Posts-->
+        <!--View Controller-->
         <scene sceneID="postSceneId">
             <objects>
                 <viewController id="BYZ-38-t0r-1" customClass="ViewController" customModule="workkie" customModuleProvider="target" sceneMemberID="viewController">
@@ -72,12 +72,6 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="wH5-16-Kfu">
-                                <rect key="frame" x="16" y="59" width="295" height="34"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wgx-Ex-b5Y">
                                 <rect key="frame" x="319" y="103" width="58" height="38"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -96,18 +90,16 @@
                             <constraint firstItem="aQ5-Me-t0B" firstAttribute="leading" secondItem="6Tk-OE-BBY-1" secondAttribute="leading" id="gjG-CR-knl"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Posts" image="person.line.dotted.person.fill" catalog="system" id="B3h-Wd-a1w"/>
                     <navigationItem key="navigationItem" id="Qhx-ai-ajc"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="postBar" destination="wH5-16-Kfu" id="4ve-Zs-oiQ"/>
                         <outlet property="postButton" destination="Wgx-Ex-b5Y" id="g1b-fV-zzE"/>
                         <outlet property="tableView" destination="aQ5-Me-t0B" id="68D-mO-g4U"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr-1" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="418" y="-716"/>
+            <point key="canvasLocation" x="1344.2748091603053" y="-716.19718309859161"/>
         </scene>
         <!--Second View Controller-->
         <scene sceneID="jaQ-Ch-NvR">
@@ -177,7 +169,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0Ki-cn-bqs" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2059" y="-716"/>
+            <point key="canvasLocation" x="2005.3435114503816" y="-716.19718309859161"/>
         </scene>
         <!--Detailed View Controller-->
         <scene sceneID="j3e-bC-jd3">
@@ -255,7 +247,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wK5-PK-tvl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2675.5725190839694" y="-716.19718309859161"/>
+            <point key="canvasLocation" x="2620.6106870229005" y="-716.19718309859161"/>
         </scene>
         <!--Comment View Controller-->
         <scene sceneID="Xzg-ob-lEw">
@@ -298,7 +290,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gz1-Ew-0YT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3306" y="-716"/>
+            <point key="canvasLocation" x="3249.6183206106871" y="-716.19718309859161"/>
         </scene>
         <!--Connect-->
         <scene sceneID="tne-QT-ifu">
@@ -583,7 +575,7 @@
                     </tabBar>
                     <connections>
                         <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="8Qo-JD-l53"/>
-                        <segue destination="BYZ-38-t0r-1" kind="relationship" relationship="viewControllers" id="nyr-FL-N70"/>
+                        <segue destination="NfG-mD-9vK" kind="relationship" relationship="viewControllers" id="nyr-FL-N70"/>
                         <segue destination="Ke8-y3-2Mx" kind="relationship" relationship="viewControllers" id="FWm-0y-cHJ"/>
                     </connections>
                 </tabBarController>
@@ -672,36 +664,30 @@
             <point key="canvasLocation" x="-776" y="701"/>
         </scene>
         <!--Posts-->
-        <scene sceneID="PAe-sO-nNd">
+        <scene sceneID="qDg-9o-JQA">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="ws5-x8-ZyM" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Posts" id="wDE-ch-qQr">
-                        <imageReference key="image" image="person.line.dotted.person" catalog="system" symbolScale="default"/>
-                    </tabBarItem>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="NfG-mD-9vK" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Posts" image="person.line.dotted.person.fill" catalog="system" id="B3h-Wd-a1w"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="nep-HJ-TNg">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Cly-qI-Qkp">
                         <rect key="frame" x="0.0" y="59" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="BYZ-38-t0r-1" kind="relationship" relationship="rootViewController" id="l6x-1Q-Y0K"/>
+                        <segue destination="BYZ-38-t0r-1" kind="relationship" relationship="rootViewController" id="QED-27-exV"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="R7E-cc-Qz8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xNM-oV-zt2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="418" y="-1473"/>
+            <point key="canvasLocation" x="417.55725190839695" y="-716.19718309859161"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="l6x-1Q-Y0K"/>
-    </inferredMetricsTieBreakers>
     <resources>
         <image name="person" catalog="system" width="128" height="121"/>
         <image name="person.2.fill" catalog="system" width="128" height="86"/>
         <image name="person.badge.plus" catalog="system" width="128" height="124"/>
         <image name="person.crop.circle.fill" catalog="system" width="128" height="123"/>
-        <image name="person.line.dotted.person" catalog="system" width="128" height="59"/>
         <image name="person.line.dotted.person.fill" catalog="system" width="128" height="59"/>
         <image name="rectangle.connected.to.line.below" catalog="system" width="121" height="128"/>
         <systemColor name="systemBackgroundColor">
