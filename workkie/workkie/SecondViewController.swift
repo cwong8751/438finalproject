@@ -45,6 +45,7 @@ class SecondViewController: UIViewController {
             
             return true
         }
+        dismiss(animated: true, completion: nil)
         return false
         if let loginVC = storyboard?.instantiateViewController(withIdentifier: "LoginViewController") {
             present(loginVC, animated: true, completion: nil)
@@ -60,6 +61,7 @@ class SecondViewController: UIViewController {
             if isLoggedIn() {
                 
             } else {
+                
                 return
             }
             let author = defaults.object(forKey: "loggedInUsername") as! String
@@ -89,5 +91,5 @@ class SecondViewController: UIViewController {
         
         dismiss(animated: true, completion: nil)
     }
-
+    
 }

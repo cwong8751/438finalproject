@@ -68,6 +68,7 @@ class CommentViewController: UIViewController {
             
             return true
         }
+        dismiss(animated: true, completion: nil)
         return false
     }
     
