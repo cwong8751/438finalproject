@@ -83,7 +83,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 try await dbManager.connect(uri: url)
                 let listOfPosts = try await dbManager.getAllPosts() ?? []
                 DispatchQueue.main.async {
-                    self.tableData = listOfPosts
+                    self.tableData = listOfPosts.reversed()
                     self.tableView.reloadData()
                     self.refreshControl.endRefreshing()
                 }
