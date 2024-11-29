@@ -15,7 +15,8 @@ class Post: Codable {
     var date: Date
     var title: String
     var comments: [String]
-    var upvotes: Int
+//    var comments: [Object]
+    var upvotes: Int?
     
     // init function
     init(author: String, content: String, date: Date, title: String, comments: [String]) {

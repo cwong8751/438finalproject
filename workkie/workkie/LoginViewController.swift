@@ -66,10 +66,7 @@ class LoginViewController: UIViewController {
                     print("User is not logged in")
                 }
             }
-            catch {
-                print(error)
-            }
+            
         }
     }
-    
 }

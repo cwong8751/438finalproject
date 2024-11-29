@@ -10,7 +10,7 @@ import MongoCore
 import MongoKitten
 
 class MongoTest {
-    private var database: MongoDatabase?
+    var database: MongoDatabase?
     
     // establish connection
     func connect(uri: String) async throws -> MongoDatabase {
@@ -168,6 +168,7 @@ class MongoTest {
                     
                     UserDefaults.standard.set(gotUser._id?.hexString, forKey: "loggedInUserID")
                     UserDefaults.standard.set(gotUser.username, forKey: "loggedInUsername")
+                    UserDefaults.standard.set(true, forKey: "username") // TODO: change your code in other files to use the two keys above.
                     UserDefaults.standard.synchronize()
                     return true
                 }
@@ -202,7 +203,7 @@ class MongoTest {
             
             var posts: [Post] = []
             let decoder = BSONDecoder()
-            
+           
             // go over every post
             for try await document in postsCursor {
                 // decode to post interface
@@ -225,6 +226,39 @@ class MongoTest {
             return nil
         }
     }
+    
+    func getAllComments(forPostId postId: ObjectId) async throws -> [String]? {
+        guard let database = database else {
+            print("Database is not connected.")
+            return nil
+        }
+        
+        let collection = database["posts"]
+        
+        do {
+            // Find the post by its _id (postId) to get its comments
+            let filter: Document = ["_id": postId]
+            
+            // Fetch the post that matches the given postId
+            if let document = try await collection.findOne(filter) {
+                // Extract the comments array from the document
+                if let comments = document["comments"] as? [String] {
+                    // Return the list of comments
+                    return comments
+                } else {
+                    print("No comments found for post with _id: \(postId)")
+                    return nil
+                }
+            } else {
+                print("Post not found for _id: \(postId)")
+                return nil
+            }
+        } catch {
+            print("Failed to retrieve comments: \(error)")
+            return nil
+        }
+    }
+
     
     // function to get specific post
     func getPost(id: ObjectId) async throws -> Post? {
@@ -279,6 +313,36 @@ class MongoTest {
             print("failed to insert post: \(error)")
             return false
         }
+    }
+    
+    func insertComment(postId: ObjectId, author: String, content: String) async throws -> Bool {
+        
+        let postId = postId
+        var author = author
+        var content = content
+        
+        guard let database = database else {
+            print("Database is not connected.")
+            return false
+        }
+        do {
+            print("Inserting comment")
+//            let newComment: Document = ["author": author, "content": content]
+            let newComment: String
+            newComment = author + ": " + content
+            let collection = database["posts"]
+            let filter: Document = ["_id": postId]
+            let update: Document = ["$push": ["comments": newComment]]
+            
+            let result = try await collection.updateOne(where: filter, to: update)
+            return true
+            
+        }
+        catch {
+            print("Failed to insert comment")
+            return false
+        }
+        return true
     }
     
     // function to delete post
