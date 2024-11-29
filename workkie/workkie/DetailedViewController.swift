@@ -73,6 +73,7 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
         setupTableView()
         setupRefreshControl()
         fetchDataForTableView()
+        updateButtonVisibility()
     }
     
     func setupTableView() {
@@ -124,5 +125,38 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
             print("Failed to cast to CommentViewController")
         }
     }
+    @IBOutlet weak var deleteButton: UIButton!
     
+    func updateButtonVisibility() {
+        let defaults = UserDefaults.standard
+        let currentUser = defaults.object(forKey: "username") as! String
+        if currentUser == author {
+            deleteButton.isHidden = false
+        } else {
+            deleteButton.isHidden = true
+        }
+    }
+    
+    @IBAction func deletePressed(_ sender: Any) {
+        let defaults = UserDefaults.standard
+        let currentUser = defaults.object(forKey: "username") as! String
+        if currentUser == author {
+            
+            Task {
+                do {
+                    let uri = "mongodb+srv://chengli:Luncy1234567890@users.at6lb.mongodb.net/users?authSource=admin&appName=Users"
+                    try await dbManager.connect(uri: uri)
+
+                    if try await dbManager.deletePost(postId: id) {
+                        print("Post deleted successfully!")
+                    } else {
+                        print("Failed to delete post.")
+                    }
+                    
+                } catch {
+                    print("Failed to delete post: \(error)")
+                }
+            }
+        }
+    }
 }

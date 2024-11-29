@@ -219,6 +219,17 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U6r-fg-uND">
+                                <rect key="frame" x="17" y="692" width="74" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Delete">
+                                    <color key="baseBackgroundColor" red="1" green="0.10969907758630015" blue="0.0" alpha="0.89803921568627454" colorSpace="custom" customColorSpace="displayP3"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="deletePressed:" destination="qUb-bo-2fc" eventType="touchUpInside" id="2Ub-rF-hbq"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lSh-XR-G0c">
                                 <rect key="frame" x="147" y="692" width="99" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -236,6 +247,7 @@
                         <outlet property="authorvc" destination="wgC-cM-VUD" id="4r7-LN-qgI"/>
                         <outlet property="contentvc" destination="YWb-0j-CqA" id="A7T-7d-DTQ"/>
                         <outlet property="datevc" destination="aaP-wO-PEe" id="etL-0n-ylA"/>
+                        <outlet property="deleteButton" destination="U6r-fg-uND" id="vmX-Hf-tBa"/>
                         <outlet property="tableView" destination="GmO-qr-wHt" id="Msk-cO-me8"/>
                         <outlet property="titlevc" destination="koR-aA-W7N" id="yfJ-Jz-O0K"/>
                     </connections>
