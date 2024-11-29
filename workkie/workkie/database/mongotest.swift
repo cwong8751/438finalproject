@@ -170,6 +170,7 @@ class MongoTest {
                     
                     UserDefaults.standard.set(gotUser._id?.hexString, forKey: "loggedInUserID")
                     UserDefaults.standard.set(gotUser.username, forKey: "loggedInUsername")
+                    UserDefaults.standard.set(true, forKey: "username") // TODO: change your code in other files to use the two keys above.
                     UserDefaults.standard.synchronize()
                     return true
                 }

@@ -60,8 +60,6 @@ class LoginViewController: UIViewController {
                 
                 if(loginResponse){
                     print("User is logged in!")
-                    // TODO: move the line below to loginuser function, and update the key to be loggedInUsername
-                    //let UserDefaults.standard.set(true, forKey: "username");
                     dismiss(animated: true, completion: nil)
                 }
                 else{
