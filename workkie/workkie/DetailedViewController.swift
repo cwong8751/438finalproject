@@ -27,6 +27,9 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
 //        cell.textLabel!.text = theData[indexPath.row]
 //        cell.textLabel!.text = comments[indexPath.row] as! String
         cell.textLabel!.text = comments?[indexPath.row] as? String ?? "Unknown Comment"
+        cell.textLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        cell.textLabel?.numberOfLines = 0
+        cell.textLabel?.lineBreakMode = .byWordWrapping
 
         return cell
     }
@@ -50,6 +53,9 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 44
 
         // Do any additional setup after loading the view.
         view.backgroundColor = UIColor.white
