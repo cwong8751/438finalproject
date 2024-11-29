@@ -17,11 +17,13 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
     var theData: [String] = []
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        <#code#>
+        return theData.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        <#code#>
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
+        cell.textLabel!.text = theData[indexPath.row]
+        return cell
     }
     
     

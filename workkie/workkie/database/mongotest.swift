@@ -259,6 +259,7 @@ class MongoTest {
             print("Failed to insert comment")
             return false
         }
+        return true
     }
     
     // function to delete post
