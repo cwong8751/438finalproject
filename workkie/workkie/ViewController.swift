@@ -15,6 +15,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     let dbManager = MongoTest()
     var tableData: [Post] = []
+//    Next line is from ChatGPT
     let refreshControl = UIRefreshControl()
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -112,12 +113,12 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     @IBOutlet weak var postBar: UITextField!
     
     @IBOutlet weak var postButton: UIButton!
-    
+//    Next 5 lines are from ChatGPT
     func configureRefreshControl() {
         refreshControl.addTarget(self, action: #selector(refreshTableData), for: .valueChanged) // Step 2: Add target for pull-to-refresh
         tableView.refreshControl = refreshControl
     }
-    
+//    Next 3 lines are from ChatGPT
     @objc func refreshTableData() {
         fetchDataForTableView() // Fetch data again
     }
