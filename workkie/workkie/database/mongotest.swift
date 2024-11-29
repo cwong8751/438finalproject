@@ -240,7 +240,8 @@ class MongoTest {
         }
         do {
             print("Inserting comment")
-            let newComment: Document = ["author": author, "content": content]
+//            let newComment: Document = ["author": author, "content": content]
+            let newComment: author + ": " + content
             let collection = database["posts"]
             let filter: Document = ["_id": postId]
             let update: Document = ["$push": ["comments": newComment]]

@@ -17,7 +17,7 @@ class DetailedViewController: UIViewController {
     var postTitle: String!
     var content: String!
     var date: String!
-    var comments: [Object]
+    var comments: [String] = []
 
     @IBOutlet weak var authorvc: UILabel!
     
@@ -39,5 +39,19 @@ class DetailedViewController: UIViewController {
         contentvc?.text = content
         
     }
-
+    
+    @IBAction func commentPressed(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//        let commentview = storyboard.instantiateViewController(withIdentifier: "commentVC")
+//        self.present(commentview, animated: true, completion: nil)
+//        commentview.postId = id
+        
+        if let commentView = storyboard.instantiateViewController(withIdentifier: "commentVC") as? CommentViewController {
+            commentView.postId = id
+            self.present(commentView, animated: true, completion: nil)
+        } else {
+            print("Failed to cast to CommentViewController")
+        }
+    }
+    
 }

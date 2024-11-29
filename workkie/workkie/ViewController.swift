@@ -58,6 +58,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
                 detailedVC.date = dateFormatter.string(from: post.date ?? Date())
+                detailedVC.comments = post.comments
 //                let defaults = UserDefaults.standard
 //                defaults.set(username, forKey: "username")
                 
