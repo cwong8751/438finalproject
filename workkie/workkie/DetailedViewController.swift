@@ -16,18 +16,12 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
     
     let refreshControl = UIRefreshControl()
     
-//    var theData: [String] = []
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return theData.count
         return comments?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-//        cell.textLabel!.text = theData[indexPath.row]
-//        cell.textLabel!.text = comments[indexPath.row] as! String
         cell.textLabel!.text = comments?[indexPath.row] as? String ?? "Unknown Comment"
         cell.textLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         cell.textLabel?.numberOfLines = 0
@@ -120,16 +114,13 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
                 try await dbManager.connect(uri: uri)
 
                 if let fetchedComments = try await dbManager.getAllComments(forPostId: id) {
-                    comments = fetchedComments
+//                    comments = fetchedComments
                     DispatchQueue.main.async {
                         self.comments = fetchedComments
                         self.tableView.reloadData()
                         self.refreshControl.endRefreshing()
                     }
                 }
-                
-//                tableView.reloadData()
-//                refreshControl.endRefreshing()
             } catch {
                 DispatchQueue.main.async {
                     print("Failed to fetch comments: \(error)")
@@ -144,9 +135,6 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
     
     @IBAction func commentPressed(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//        let commentview = storyboard.instantiateViewController(withIdentifier: "commentVC")
-//        self.present(commentview, animated: true, completion: nil)
-//        commentview.postId = id
         
         if let commentView = storyboard.instantiateViewController(withIdentifier: "commentVC") as? CommentViewController {
             commentView.postId = id

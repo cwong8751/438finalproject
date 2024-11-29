@@ -53,6 +53,7 @@ class CommentViewController: UIViewController {
             } catch {
                 print("Error: \(error)")
             }
+
             dismiss(animated: true, completion: nil)
             
         }
