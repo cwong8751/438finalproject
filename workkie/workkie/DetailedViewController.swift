@@ -14,18 +14,22 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
     
     @IBOutlet weak var tableView: UITableView!
     
-    var theData: [String] = []
+//    var theData: [String] = []
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return theData.count
+//        return theData.count
+        return comments?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
-        cell.textLabel!.text = theData[indexPath.row]
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+//        cell.textLabel!.text = theData[indexPath.row]
+//        cell.textLabel!.text = comments[indexPath.row] as! String
+        cell.textLabel!.text = comments?[indexPath.row] as? String ?? "Unknown Comment"
+
         return cell
     }
-    
     
     let dbManager = MongoTest()
     
@@ -34,7 +38,7 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
     var postTitle: String!
     var content: String!
     var date: String!
-    var comments: [String] = []
+    var comments: [String]?
 
     @IBOutlet weak var authorvc: UILabel!
     
@@ -57,7 +61,6 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
         
         setupTableView()
         fetchDataForTableView()
-        
     }
     
     func setupTableView() {
@@ -67,6 +70,7 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
     
     func fetchDataForTableView() {
         let theData = comments
+        tableView.reloadData()
     }
     
     @IBAction func commentPressed(_ sender: Any) {
