@@ -14,8 +14,6 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
     
     @IBOutlet weak var tableView: UITableView!
     
-    let refreshControl = UIRefreshControl()
-    
 //    var theData: [String] = []
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
