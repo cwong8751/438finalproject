@@ -234,6 +234,10 @@ class MongoTest {
     
     func insertComment(postId: ObjectId, author: String, content: String) async throws -> Bool {
         
+        let postId = postId
+        var author = author
+        var content = content
+        
         guard let database = database else {
             print("Database is not connected.")
             return false
@@ -241,12 +245,14 @@ class MongoTest {
         do {
             print("Inserting comment")
 //            let newComment: Document = ["author": author, "content": content]
-            let newComment: author + ": " + content
+            let newComment: String
+            newComment = author + ": " + content
             let collection = database["posts"]
             let filter: Document = ["_id": postId]
             let update: Document = ["$push": ["comments": newComment]]
             
             let result = try await collection.updateOne(where: filter, to: update)
+            return true
             
         }
         catch {
