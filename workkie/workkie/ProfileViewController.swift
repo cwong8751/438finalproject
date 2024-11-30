@@ -23,6 +23,7 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var degreeButton: UIButton!
     @IBOutlet weak var profileImageView: UIImageView!
     let dbManager = MongoTest()
+    let uri = "mongodb+srv://chengli:Luncy1234567890@users.at6lb.mongodb.net/users?authSource=admin&appName=Users"
     
     func connect(uri: String) async throws -> MongoDatabase {
         database = try await MongoDatabase.connect(to: uri)
@@ -42,7 +43,7 @@ class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let uri = "mongodb+srv://chengli:Luncy1234567890@users.at6lb.mongodb.net/users?authSource=admin&appName=Users"
+        
         
         connectToDatabase(uri: uri)
         
