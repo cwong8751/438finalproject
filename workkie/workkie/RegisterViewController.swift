@@ -14,6 +14,8 @@ class RegisterViewController: UIViewController {
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
+    @IBOutlet weak var degreeTextField: UITextField!
+    @IBOutlet weak var educationTextField: UITextField!
     @IBOutlet weak var registerButton: UIButton!
     
     @IBOutlet weak var jumpToLoginButton: UIButton!
@@ -29,7 +31,7 @@ class RegisterViewController: UIViewController {
         // connect to database
         Task{
             do{
-                database = try await dbManager.connect(uri: uri) // still kept your original structure
+                database = try await dbManager.connect(uri: uri)
             }
             catch {
                 print("Failed to connect to MongoDB: \(error)")
@@ -43,21 +45,28 @@ class RegisterViewController: UIViewController {
     }
     
     @IBAction func registerButtonTapped(_ sender: UIButton) {
-        guard let email = emailTextField.text, let username = usernameTextField.text, let password = passwordTextField.text else {
-            print("Please fill in all fields.")
+        guard let email = emailTextField.text, !email.isEmpty,
+              let username = usernameTextField.text, !username.isEmpty,
+              let password = passwordTextField.text, !password.isEmpty,
+              let degree = degreeTextField.text, !degree.isEmpty,
+              let education = educationTextField.text, !education.isEmpty else {
+            let alertController = UIAlertController(title: "Missing Information", message: "Please fill in all fields", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alertController.addAction(okAction)
+            present(alertController, animated: true, completion: nil)
             return
         }
         
-        registerUser(email: email, username: username, password: password)
+        registerUser(email: email, username: username, password: password, education: education, degree: degree)
     }
     
-    func registerUser(email: String, username: String, password: String) {
+    func registerUser(email: String, username: String, password: String, education: String, degree: String) {
         
         Task {
             do{
                 
                 // i kept your checking for duplicate users
-                guard let database = database else {
+                guard let database = self.database else {
                     print("Database is not connected.")
                     return
                 }
@@ -70,9 +79,9 @@ class RegisterViewController: UIViewController {
                     print("Email is already registered.")
                     return
                 }
-            
+                
                 // insert new user
-                let newUser = User(username: username, password: password, email: email)
+                let newUser = User(username: username, password: password, avatar: nil, email: email, latitude: nil, longitude: nil, education: education, degree: degree, connections: [], connectionRequests: [])
                 try await dbManager.insertUser(user: newUser)
                 
                 
@@ -86,5 +95,5 @@ class RegisterViewController: UIViewController {
             }
         }
     }
-
+    
 }

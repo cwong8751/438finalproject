@@ -375,8 +375,25 @@ class MongoTest {
             // get user to send connection request to
             let dUser = try await self.getUser(userId: clRequest.toUser)
             
-            // modify their connection requests field
-            let dUserNew = User(id: dUser!._id!, username: dUser!.username, password: dUser!.password, latitude: dUser!.latitude, longitude: dUser!.longitude, connectionRequests: [clRequest])
+            guard let dUser = dUser else {
+                print("didn't find user")
+                return false
+            }
+
+            let dUserNew = User(
+                _id: dUser._id,
+                username: dUser.username,
+                password: dUser.password,
+                avatar: dUser.avatar,
+                email: dUser.email,
+                latitude: dUser.latitude,
+                longitude: dUser.longitude,
+                education: dUser.education,
+                degree: dUser.degree,
+                connections: dUser.connections ?? [],
+                connectionRequests: [clRequest]
+            )
+
             
             // put the user back
             let updateResult = try await updateUser(newUser: dUserNew)

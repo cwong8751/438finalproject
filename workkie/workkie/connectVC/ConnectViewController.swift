@@ -55,12 +55,14 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
         // Adjust row height for better UI
         tableView.rowHeight = 60
         
-        // Check whether to use real MongoDB data or pseudo data
-        if useRealData {
-            connectToMongoDB()
-        } else {
-            loadPseudoData()
-        }
+        // always load real data now
+        connectToMongoDB()
+        //        // Check whether to use real MongoDB data or pseudo data
+        //        if useRealData {
+        //            connectToMongoDB()
+        //        } else {
+        //            loadPseudoData()
+        //        }
         
         // Setup map view
         setupMapView()
@@ -78,11 +80,7 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     override func viewWillAppear(_ animated: Bool) {
         // Check whether to use real MongoDB data or pseudo data
-        if useRealData {
-            connectToMongoDB()
-        } else {
-            loadPseudoData()
-        }
+        connectToMongoDB()
         
         
         // Setup map view
@@ -104,8 +102,8 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
         // get user's latitude and longitude and update it to mongo
         
         if isLoggedIn() {
-            print("current user: ", currentUser)
-            print("current username is: ", currentUsername)
+            //            print("current user: ", currentUser)
+            //            print("current username is: ", currentUsername)
             print("user logged in, setting user coordinates")
             
             Task {
@@ -113,7 +111,7 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
                     try await mongoTest.connect(uri: dbUri)
                     let allUsers = await self.mongoTest.getUsers()
                     
-                    if let gotUser = allUsers?.first(where: {$0._id?.hexString == currentUser?.hexString}) {
+                    if let gotUser = allUsers?.first(where: {$0._id?.hexString == self.currentUser?.hexString}) {
                         
                         // get current user coordinates
                         let curLat = self.locationManager.userCoordinates?.latitude
@@ -122,7 +120,19 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
                         // create new user object
                         if let curLat = curLat, let curLon = curLon {
                             
-                            let userWithCoord = User(id: gotUser._id!, username: gotUser.username, password: gotUser.password, latitude: curLat, longitude: curLon, education: gotUser.education ?? "N/A", degree: gotUser.degree ?? "N/A", connectionRequests: gotUser.connectionRequests ?? [], connections: gotUser.connections ?? [])
+                            let userWithCoord = User(
+                                _id: gotUser._id,
+                                username: gotUser.username,
+                                password: gotUser.password,
+                                avatar: gotUser.avatar,
+                                email: gotUser.email,
+                                latitude: curLat,
+                                longitude: curLon,
+                                education: gotUser.education,
+                                degree: gotUser.degree,
+                                connections: gotUser.connections ?? [],
+                                connectionRequests: gotUser.connectionRequests ?? []
+                            )
                             
                             let insertResult = try await mongoTest.updateUser(newUser: userWithCoord)
                             
@@ -210,19 +220,19 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
-    func loadPseudoData() {
-        profiles = [
-            User(username: "Alice", password: "password1", latitude: 37.7749, longitude: -122.4194),
-            User(username: "Bob", password: "password2", latitude: 37.7753, longitude: -122.4200),
-            User(username: "Charlie", password: "password3", latitude: 34.0522, longitude: -118.2437),
-            User(username: "Diana", password: "password4", latitude: 51.5074, longitude: -0.1278),
-            User(username: "Eve", password: "password5", latitude: 48.8566, longitude: 2.3522)
-        ]
-        
-        filteredProfiles = profiles
-        tableView.reloadData()
-        updateMapAnnotationsForAllUsers()  // update map
-    }
+    //    func loadPseudoData() {
+    //        profiles = [
+    //            User(username: "Alice", password: "password1", latitude: 37.7749, longitude: -122.4194),
+    //            User(username: "Bob", password: "password2", latitude: 37.7753, longitude: -122.4200),
+    //            User(username: "Charlie", password: "password3", latitude: 34.0522, longitude: -118.2437),
+    //            User(username: "Diana", password: "password4", latitude: 51.5074, longitude: -0.1278),
+    //            User(username: "Eve", password: "password5", latitude: 48.8566, longitude: 2.3522)
+    //        ]
+    //
+    //        filteredProfiles = profiles
+    //        tableView.reloadData()
+    //        updateMapAnnotationsForAllUsers()  // update map
+    //    }
     
     // MARK: - UITableViewDataSource Methods
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -251,11 +261,26 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     
     @IBAction func connectionButtonPressed(_ sender: Any) {
-        let connectionViewController = storyboard?.instantiateViewController(withIdentifier: "connectionViewController") as! ConnectionViewController
-        connectionViewController.title = "My Connections"
         
-        let navController = UINavigationController(rootViewController: connectionViewController)
-        self.present(navController, animated: true, completion: nil)
+        // check log in
+        if isLoggedIn() {
+            let connectionViewController = storyboard?.instantiateViewController(withIdentifier: "connectionViewController") as! ConnectionViewController
+            connectionViewController.title = "My Connections"
+            
+            let navController = UINavigationController(rootViewController: connectionViewController)
+            self.present(navController, animated: true, completion: nil)
+        }
+        else{
+            let alertController = UIAlertController(
+                title: "Login Required",
+                message: "You need to log in to see your connections",
+                preferredStyle: .alert
+            )
+            
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
     }
     
     
@@ -334,7 +359,7 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
                 let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
                 
                 // Center the map on the selected user's location
-                let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
+                let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 5000, longitudinalMeters: 5000)
                 mapView.setRegion(region, animated: true)
                 
                 // Remove old annotations and add a new one for the selected user
@@ -378,7 +403,7 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
                 let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
                 
                 // updates the map
-                let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
+                let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 5000, longitudinalMeters: 5000)
                 mapView.setRegion(region, animated: true)
                 
                 // removes old annotations and add only the matching annotations
@@ -469,13 +494,17 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
                                                 
                                                 // Create new user with updated connections
                                                 let newUser = User(
-                                                    id: gUser._id!,
+                                                    _id: gUser._id!,
                                                     username: gUser.username,
                                                     password: gUser.password,
+                                                    avatar: gUser.avatar,
+                                                    email: gUser.email,
                                                     latitude: gUser.latitude,
                                                     longitude: gUser.longitude,
-                                                    connectionRequests: [], // clear all connection requests
-                                                    connections: updatedConnections
+                                                    education: gUser.education,
+                                                    degree: gUser.degree,
+                                                    connections: updatedConnections,
+                                                    connectionRequests: [] // clear all
                                                 )
                                                 
                                                 // creates a new user to replace the old one, remove the existing connection request
