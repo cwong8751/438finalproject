@@ -80,6 +80,19 @@ class ProfileViewController: UIViewController {
             // TODO: also get education, degree label from database
             UserDefaults.standard.synchronize()
             self.username.text = UserDefaults.standard.string(forKey: "loggedInUsername")
+            
+            Task {
+                do {
+                    try await dbManager.connect(uri: uri)
+                    let user = try await dbManager.getUser(userId: ObjectId(UserDefaults.standard.string(forKey: "loggedInUserID")!)!)
+                    
+                    self.education.text = user?.education ?? "Failed to fetch"
+                    self.degree.text = user?.degree ?? "Failed to fetch"
+                }
+                catch {
+                    print(error)
+                }
+            }
         }
         else{
             // trigger login screen
