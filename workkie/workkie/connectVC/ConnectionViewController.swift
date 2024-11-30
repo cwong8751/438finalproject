@@ -26,8 +26,8 @@ class ConnectionViewController: UIViewController, UITableViewDataSource, UITable
         // set up table view
         connectionTableView.dataSource = self
         connectionTableView.delegate = self
-        
-        //TODO: fill connections array
+        connectionTableView.register(UINib(nibName: "ConnectionCell", bundle: nil), forCellReuseIdentifier: "ConnectionCell")
+        connectionTableView.rowHeight = 120
         getConnections()
     }
     
@@ -37,8 +37,15 @@ class ConnectionViewController: UIViewController, UITableViewDataSource, UITable
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "connectionViewCell", for: indexPath)
-        cell.textLabel?.text = connections[indexPath.row].username
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ConnectionCell", for: indexPath) as? ConnectionCell else {
+            return UITableViewCell()
+        }
+        
+        let connection = connections[indexPath.row]
+        
+        cell.nameLabel.text = connection.username
+        cell.detailButton.addTarget(self, action: #selector(detailButtonPressed(_:)), for: .touchUpInside)
+        cell.detailButton.tag = indexPath.row
         return cell
     }
 
@@ -98,6 +105,49 @@ class ConnectionViewController: UIViewController, UITableViewDataSource, UITable
             return true
         }
         return false
+    }
+    
+    @objc func detailButtonPressed(_ sender: UIButton) {
+        
+        let selectedIndex = sender.tag
+        
+        // get user based on username
+        Task {
+            do{
+                try await dbManager.connect(uri: dbUri)
+                let listUsers = try await dbManager.getUsers()
+                var userBeingSend: User? = nil
+                
+                if let listUsers = listUsers {
+                    for user in listUsers {
+                        if user.username == connections[selectedIndex].username {
+                            userBeingSend = user
+                            break
+                        }
+                    }
+                    
+                    DispatchQueue.main.async {
+                        // navigate to the profile detailed screen of the selected user
+                        let connectionDetailView = self.storyboard?.instantiateViewController(withIdentifier: "connectionDetailView") as! ConnectionDetailViewController
+                        
+                        if let user = userBeingSend {
+                            connectionDetailView.user = user
+                        }
+                        connectionDetailView.title = "User Profile"
+                        
+                        let navController = UINavigationController(rootViewController: connectionDetailView)
+                        self.present(navController, animated: true, completion: nil)
+                    }
+                }
+                else{
+                    print("get list of users failed")
+                    //TODO: show error alert
+                }
+            }
+            catch {
+                print(error)
+            }
+        }
     }
     
 }

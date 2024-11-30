@@ -17,6 +17,9 @@
 		7FA857922CE3BA8900F7B0AC /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA857912CE3BA8900F7B0AC /* CustomTableViewCell.swift */; };
 		7FB7EE142CF63BD60020E277 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB7EE132CF63BD60020E277 /* SecondViewController.swift */; };
 		7FB7EE162CF952580020E277 /* CommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB7EE152CF952580020E277 /* CommentViewController.swift */; };
+		C30807152CFB87850053A428 /* ConnectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C30807142CFB87850053A428 /* ConnectionCell.xib */; };
+		C30807172CFB87A40053A428 /* ConnectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30807162CFB87A40053A428 /* ConnectionCell.swift */; };
+		C30807192CFB91690053A428 /* ConnectionDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30807182CFB91690053A428 /* ConnectionDetailViewController.swift */; };
 		C33EBD352CF8E6CD00C15D23 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33EBD342CF8E6CD00C15D23 /* TabBarController.swift */; };
 		C33EBD372CFA613500C15D23 /* ConnectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33EBD362CFA613500C15D23 /* ConnectionViewController.swift */; };
 		C3421A262CE44B7E00B22A64 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3421A252CE44B7E00B22A64 /* Main.storyboard */; };
@@ -49,6 +52,9 @@
 		7FA857912CE3BA8900F7B0AC /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
 		7FB7EE132CF63BD60020E277 /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
 		7FB7EE152CF952580020E277 /* CommentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewController.swift; sourceTree = "<group>"; };
+		C30807142CFB87850053A428 /* ConnectionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConnectionCell.xib; sourceTree = "<group>"; };
+		C30807162CFB87A40053A428 /* ConnectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionCell.swift; sourceTree = "<group>"; };
+		C30807182CFB91690053A428 /* ConnectionDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionDetailViewController.swift; sourceTree = "<group>"; };
 		C33EBD342CF8E6CD00C15D23 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		C33EBD362CFA613500C15D23 /* ConnectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionViewController.swift; sourceTree = "<group>"; };
 		C3421A252CE44B7E00B22A64 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
@@ -91,6 +97,9 @@
 				7ADCAD512CE324610065ACB0 /* ProfileCell.xib */,
 				7ADCAD502CE324610065ACB0 /* ProfileCell.swift */,
 				C33EBD362CFA613500C15D23 /* ConnectionViewController.swift */,
+				C30807142CFB87850053A428 /* ConnectionCell.xib */,
+				C30807162CFB87A40053A428 /* ConnectionCell.swift */,
+				C30807182CFB91690053A428 /* ConnectionDetailViewController.swift */,
 			);
 			path = connectVC;
 			sourceTree = "<group>";
@@ -234,6 +243,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C3A53E3F2CD8676A00D105EC /* Assets.xcassets in Resources */,
+				C30807152CFB87850053A428 /* ConnectionCell.xib in Resources */,
 				C3421A262CE44B7E00B22A64 /* Main.storyboard in Resources */,
 				C3FC87692CDB132B00AA4C16 /* GoogleService-Info.plist in Resources */,
 				C3A53E422CD8676A00D105EC /* Base in Resources */,
@@ -261,7 +271,9 @@
 				007E6C872CDC2B6B005848ED /* ProfileViewController.swift in Sources */,
 				7FB7EE162CF952580020E277 /* CommentViewController.swift in Sources */,
 				C3A53E362CD8676900D105EC /* AppDelegate.swift in Sources */,
+				C30807172CFB87A40053A428 /* ConnectionCell.swift in Sources */,
 				C371B8602CDABB0000890F02 /* MongoTest.swift in Sources */,
+				C30807192CFB91690053A428 /* ConnectionDetailViewController.swift in Sources */,
 				C35C876F2CE008C6002AA2C1 /* Post.swift in Sources */,
 				C3AE42A22CF50A3900164219 /* Connection.swift in Sources */,
 				C3AE42A02CF30A8A00164219 /* ConnectionRequest.swift in Sources */,

@@ -50,7 +50,6 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
         swipeRefresh.addTarget(self, action: #selector(connectToMongoDB), for: .valueChanged)
         tableView.refreshControl = swipeRefresh
         
-        // Register the custom cell nib
         tableView.register(UINib(nibName: "ProfileCell", bundle: nil), forCellReuseIdentifier: "ProfileCell")
         
         // Adjust row height for better UI

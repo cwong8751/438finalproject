@@ -28,8 +28,8 @@ class User: Codable {
         self._id = nil // let mongo set it for us
         self.latitude = nil
         self.longitude = nil
-        self.education = nil
-        self.degree = nil
+        self.education = "N/A"
+        self.degree = "N/A"
         self.connectionRequests = []
         self.connections = []
         self.avatar = nil
@@ -42,8 +42,8 @@ class User: Codable {
         self.latitude = latitude
         self.longitude = longitude
         self._id = nil
-        self.education = nil
-        self.degree = nil
+        self.education = "N/A"
+        self.degree = "N/A"
         self.connectionRequests = []
         self.connections = []
         self.avatar = nil
@@ -56,8 +56,8 @@ class User: Codable {
         self.latitude = latitude
         self.longitude = longitude
         self._id = id
-        self.education = nil
-        self.degree = nil
+        self.education = "N/A"
+        self.degree = "N/A"
         self.connectionRequests = []
         self.connections = []
         self.avatar = nil
@@ -74,6 +74,8 @@ class User: Codable {
         self.connections = []
         self.avatar = nil
         self.email = nil
+        self.education = "N/A"
+        self.degree = "N/A"
     }
     
     init(id: ObjectId, username: String, password: String, latitude: Double?, longitude: Double?, connectionRequests: [ConnectionRequest], connections: [Connection]) {
@@ -86,6 +88,8 @@ class User: Codable {
         self.connections = connections
         self.avatar = nil
         self.email = nil
+        self.education = "N/A"
+        self.degree = "N/A"
     }
     
     init(id: ObjectId, username: String, password: String, latitude: Double, longitude: Double, education: String, degree: String, connectionRequests: [ConnectionRequest], connections: [Connection]) {
