@@ -307,6 +307,29 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
         Task {
             do {
                 
+                // check if the two users are already connections
+                let users = try await mongoTest.getUser(userId: currentUser!)
+                
+                if let connections = users?.connections {
+                    for connection in connections {
+                        //print("connection.username \(connection.username)")
+                        //print("selecteduser.username \(selectedUser.username)")
+                        if connection.username == selectedUser.username {
+                            // abort because user already connections
+                            DispatchQueue.main.async {
+                                let alert = UIAlertController(
+                                    title: "Request not sent",
+                                    message: "You are already connections with \(selectedUser.username)",
+                                    preferredStyle: .alert
+                                )
+                                alert.addAction(UIAlertAction(title: "OK", style: .default))
+                                self.present(alert, animated: true)
+                            }
+                            return
+                        }
+                    }
+                }
+            
                 let clRequest = ConnectionRequest(fromUser: currentUser!, toUser: selectedUser._id!, status: "pending", date: Date(), fromUsername: currentUsername!, toUsername: selectedUser.username)
                 
                 let isRequestSent = try await mongoTest.sendConnectionRequest(clRequest: clRequest)
@@ -469,30 +492,57 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
                                 let cnRequestMessage = rq.fromUsername + " wants to connect with you"
                                 // show alert
                                 let alert = UIAlertController(title: "New Connection Request", message: cnRequestMessage , preferredStyle: .alert)
-                                
+                            
                                 alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { _ in
-                                    // TODO: handle when user cancels connection request
-                                    
+                                    Task {
+                                        do{
+                                            let gUser = try await self.mongoTest.getUser(userId: self.currentUser!)
+                                            
+                                            
+                                            if let gUser = gUser {
+                                                
+                                                // create new user with removed connection request
+                                                let newUser = User(
+                                                    _id: gUser._id!,
+                                                    username: gUser.username,
+                                                    password: gUser.password,
+                                                    avatar: gUser.avatar,
+                                                    email: gUser.email,
+                                                    latitude: gUser.latitude,
+                                                    longitude: gUser.longitude,
+                                                    education: gUser.education,
+                                                    degree: gUser.degree,
+                                                    connections: gUser.connections ?? [],
+                                                    connectionRequests: []
+                                                )
+                                                
+                                                // creates a new user to replace the old one, remove the existing connection request
+                                                try await self.mongoTest.updateUser(newUser: newUser)
+                                            }
+                                        }
+                                        catch {
+                                            print(error)
+                                        }
+                                    }
                                 }))
                                 
                                 alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { _ in
-                                    // TODO: handle when user confirms connection request
                                     
                                     // get the old user
                                     Task {
                                         do{
                                             let gUser = try await self.mongoTest.getUser(userId: self.currentUser!)
                                             
-                                            // Safely unwrap gUser
+                                            
                                             if let gUser = gUser {
-                                                // Ensure connections array is non-nil
+                                                
                                                 var updatedConnections = gUser.connections ?? []
                                                 
-                                                // Create new connection and append to the array
+                                                
                                                 let nConnection = Connection(username: rq.fromUsername)
                                                 updatedConnections.append(nConnection)
                                                 
-                                                // Create new user with updated connections
+                                                // updating the current user to insert the new connection
                                                 let newUser = User(
                                                     _id: gUser._id!,
                                                     username: gUser.username,
@@ -510,6 +560,31 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
                                                 // creates a new user to replace the old one, remove the existing connection request
                                                 try await self.mongoTest.updateUser(newUser: newUser)
                                                 
+                                                // also update the user being connected
+                                                let requestingUser = try await self.mongoTest.getUser(userId: rq.fromUser)
+                                                if let requestingUser = requestingUser {
+                                                    var updatedConnections = requestingUser.connections ?? []
+                                                    let reciprocalConnection = Connection(username: self.currentUsername!)
+                                                    updatedConnections.append(reciprocalConnection)
+                                                    
+                                                    let updatedRequestingUser = User(
+                                                        _id: requestingUser._id!,
+                                                        username: requestingUser.username,
+                                                        password: requestingUser.password,
+                                                        avatar: requestingUser.avatar,
+                                                        email: requestingUser.email,
+                                                        latitude: requestingUser.latitude,
+                                                        longitude: requestingUser.longitude,
+                                                        education: requestingUser.education,
+                                                        degree: requestingUser.degree,
+                                                        connections: updatedConnections,
+                                                        connectionRequests: requestingUser.connectionRequests ?? []
+                                                    )
+                                                    
+                                                    try await self.mongoTest.updateUser(newUser: updatedRequestingUser)
+                                                }
+
+                                                
                                                 // show success alert
                                                 let alert = UIAlertController(title: "Connected!", message: "You are connections with " + rq.fromUsername, preferredStyle: .alert)
                                                 alert.addAction(UIAlertAction(title: "OK", style: .default))
@@ -521,6 +596,8 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
                                         }
                                     }
                                 }))
+                                
+                                alert.addAction(UIAlertAction(title: "Ignore", style: .default, handler: nil))
                                 
                                 self.present(alert, animated: true, completion: nil)
                             }
