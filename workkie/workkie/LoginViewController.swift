@@ -64,6 +64,9 @@ class LoginViewController: UIViewController {
                 }
                 else{
                     print("User is not logged in")
+                    let alert = UIAlertController(title: "Login failed", message: "Username or password incorrect", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
                 }
             }
             
