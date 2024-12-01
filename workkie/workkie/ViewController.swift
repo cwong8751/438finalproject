@@ -31,7 +31,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         cell.postContent.text = post.content
         let currentDate = Date()
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        dateFormatter.dateFormat = "HH:mm MM/dd/yyyy " // yyyy/MM/dd HH:mm:ss
         let dateString = dateFormatter.string(from: currentDate)
         cell.postDate.text = dateString
         cell.postTitle.text = post.title
@@ -57,7 +57,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         detailedVC.postTitle = post.title
         detailedVC.content = post.content
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        dateFormatter.dateFormat = "HH:mm MM/dd/yyyy"
         detailedVC.date = dateFormatter.string(from: post.date ?? Date())
         detailedVC.comments = post.comments
         
