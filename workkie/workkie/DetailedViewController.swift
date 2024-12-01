@@ -16,18 +16,12 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
     
     let refreshControl = UIRefreshControl()
     
-//    var theData: [String] = []
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return theData.count
         return comments?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-//        cell.textLabel!.text = theData[indexPath.row]
-//        cell.textLabel!.text = comments[indexPath.row] as! String
         cell.textLabel!.text = comments?[indexPath.row] as? String ?? "Unknown Comment"
         cell.textLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         cell.textLabel?.numberOfLines = 0
@@ -56,6 +50,15 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if isLoggedIn() {
+        }
+        else{
+            // trigger login screen
+            if let loginVC = storyboard?.instantiateViewController(withIdentifier: "LoginViewController") {
+                present(loginVC, animated: true, completion: nil)
+            }
+        }
+        
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 44
 
@@ -74,6 +77,18 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
         setupRefreshControl()
         fetchDataForTableView()
         updateButtonVisibility()
+    }
+    
+    func isLoggedIn() -> Bool {
+        
+        if let user = UserDefaults.standard.string(forKey: "loggedInUserID"),
+           !user.isEmpty,
+           let username = UserDefaults.standard.string(forKey: "loggedInUsername"),
+           !username.isEmpty {
+            
+            return true
+        }
+        return false
     }
     
     func setupTableView() {
@@ -95,28 +110,31 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
 //        tableView.reloadData()
         Task {
             do {
-                // Simulated fetch (Replace this with your actual MongoDB query)
                 let uri = "mongodb+srv://chengli:Luncy1234567890@users.at6lb.mongodb.net/users?authSource=admin&appName=Users"
                 try await dbManager.connect(uri: uri)
 
                 if let fetchedComments = try await dbManager.getAllComments(forPostId: id) {
-                    comments = fetchedComments
+//                    comments = fetchedComments
+                    DispatchQueue.main.async {
+                        self.comments = fetchedComments
+                        self.tableView.reloadData()
+                        self.refreshControl.endRefreshing()
+                    }
                 }
-                
-                tableView.reloadData()
-                refreshControl.endRefreshing() // Stop refresh animation
             } catch {
-                print("Failed to fetch comments: \(error)")
-                refreshControl.endRefreshing() // Stop refresh even on failure
+                DispatchQueue.main.async {
+                    print("Failed to fetch comments: \(error)")
+                    self.refreshControl.endRefreshing()
+                }
+            }
+            DispatchQueue.main.async {
+                self.refreshControl.endRefreshing()
             }
         }
     }
     
     @IBAction func commentPressed(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//        let commentview = storyboard.instantiateViewController(withIdentifier: "commentVC")
-//        self.present(commentview, animated: true, completion: nil)
-//        commentview.postId = id
         
         if let commentView = storyboard.instantiateViewController(withIdentifier: "commentVC") as? CommentViewController {
             commentView.postId = id
@@ -128,18 +146,22 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
     @IBOutlet weak var deleteButton: UIButton!
     
     func updateButtonVisibility() {
-        let defaults = UserDefaults.standard
-        let currentUser = defaults.object(forKey: "username") as! String
-        if currentUser == author {
-            deleteButton.isHidden = false
-        } else {
-            deleteButton.isHidden = true
+        deleteButton.isHidden = true
+        if isLoggedIn() {
+            let defaults = UserDefaults.standard
+            let currentUser = defaults.object(forKey: "loggedInUsername") as! String
+            if currentUser == author {
+                deleteButton.isHidden = false
+            } else {
+                deleteButton.isHidden = true
+            }
         }
+        
     }
     
     @IBAction func deletePressed(_ sender: Any) {
         let defaults = UserDefaults.standard
-        let currentUser = defaults.object(forKey: "username") as! String
+        let currentUser = defaults.object(forKey: "loggedInUsername") as! String
         if currentUser == author {
             
             Task {

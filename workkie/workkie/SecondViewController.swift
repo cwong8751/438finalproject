@@ -25,6 +25,31 @@ class SecondViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if isLoggedIn() {
+        }
+        else{
+            // trigger login screen
+            if let loginVC = storyboard?.instantiateViewController(withIdentifier: "LoginViewController") {
+                present(loginVC, animated: true, completion: nil)
+            }
+        }
+    }
+    
+    func isLoggedIn() -> Bool {
+        
+        if let user = UserDefaults.standard.string(forKey: "loggedInUserID"),
+           !user.isEmpty,
+           let username = UserDefaults.standard.string(forKey: "loggedInUsername"),
+           !username.isEmpty {
+            
+            return true
+        }
+        dismiss(animated: true, completion: nil)
+        return false
+        if let loginVC = storyboard?.instantiateViewController(withIdentifier: "LoginViewController") {
+            present(loginVC, animated: true, completion: nil)
+        }
     }
     
     
@@ -33,7 +58,13 @@ class SecondViewController: UIViewController {
         Task {
             // Collect data from UI
             let defaults = UserDefaults.standard
-            let author = defaults.object(forKey: "username") as! String
+            if isLoggedIn() {
+                
+            } else {
+                
+                return
+            }
+            let author = defaults.object(forKey: "loggedInUsername") as! String
             guard let title = titleOpening.text,
             let content = contentOpening.text else {
             print("Incomplete form")
@@ -60,5 +91,5 @@ class SecondViewController: UIViewController {
         
         dismiss(animated: true, completion: nil)
     }
-
+    
 }
