@@ -15,7 +15,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     let dbManager = MongoTest()
     var tableData: [Post] = []
-//    Next line is from ChatGPT
+    //    Next line is from ChatGPT
     let refreshControl = UIRefreshControl()
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -23,7 +23,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
+        
         let post = tableData[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
         let id = post._id
@@ -46,26 +46,27 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         guard let detailedVC = storyboard?.instantiateViewController(withIdentifier: "DetailedViewController") as? DetailedViewController else {
-                    print("DetailedViewController not found in storyboard!")
-                    return
-                }
-                
-                // Pass data to DetailedViewController
-                let post = tableData[indexPath.row]
-                detailedVC.id = post._id
-                detailedVC.author = post.author
-                detailedVC.postTitle = post.title
-                detailedVC.content = post.content
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                detailedVC.date = dateFormatter.string(from: post.date ?? Date())
-                detailedVC.comments = post.comments
-//                let defaults = UserDefaults.standard
-//                defaults.set(username, forKey: "username")
-                
-                navigationController?.pushViewController(detailedVC, animated: true)
+            print("DetailedViewController not found in storyboard!")
+            return
         }
-
+        
+        // Pass data to DetailedViewController
+        let post = tableData[indexPath.row]
+        detailedVC.id = post._id
+        detailedVC.author = post.author
+        detailedVC.postTitle = post.title
+        detailedVC.content = post.content
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        detailedVC.date = dateFormatter.string(from: post.date ?? Date())
+        detailedVC.comments = post.comments
+        
+        // set title
+        detailedVC.title = post.title
+        
+        navigationController?.pushViewController(detailedVC, animated: true)
+    }
+    
     
     func setupTableView() {
         tableView.dataSource = self
@@ -75,9 +76,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     func fetchDataForTableView() {
         
-        print("up here")
+        //print("up here")
         let url = "mongodb+srv://chengli:Luncy1234567890@users.at6lb.mongodb.net/users?authSource=admin&appName=Users"
-
+        
         Task {
             do {
                 try await dbManager.connect(uri: url)
@@ -104,42 +105,44 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         fetchDataForTableView()
         configureRefreshControl()
         // Do any additional setup after loading the view.
-        
-        
     }
     
     @IBOutlet weak var tableView: UITableView!
     
     @IBOutlet weak var postButton: UIButton!
-//    Next 5 lines are from ChatGPT
+    //    Next 5 lines are from ChatGPT
     func configureRefreshControl() {
         refreshControl.addTarget(self, action: #selector(refreshTableData), for: .valueChanged) // Step 2: Add target for pull-to-refresh
         tableView.refreshControl = refreshControl
     }
-//    Next 3 lines are from ChatGPT
+    //    Next 3 lines are from ChatGPT
     @objc func refreshTableData() {
         fetchDataForTableView() // Fetch data again
     }
     
-//    Next 5 lines are from https://www.youtube.com/watch?v=q7l9H9PVnr4
+    //    Next 5 lines are from https://www.youtube.com/watch?v=q7l9H9PVnr4
     @IBAction func postButtonPressed(_ sender: Any) {
-//        let detailedVC = SecondViewController()
-//        navigationController?.pushViewController(detailedVC, animated: true)
-        let secondController = self.storyboard!.instantiateViewController(withIdentifier: "post_controller") as! SecondViewController
-        secondController.loadViewIfNeeded()
-        self.present(secondController, animated: true, completion: nil)
+        if isLoggedIn() {
+            let secondController = self.storyboard!.instantiateViewController(withIdentifier: "post_controller") as! SecondViewController
+            secondController.title = "New Post"
+            let navController = UINavigationController(rootViewController: secondController)
+            self.present(navController, animated: true, completion: nil)
+        }
+        else{
+            let alert = UIAlertController(title: "Login to continue", message: "Log in to write a post", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    func isLoggedIn() -> Bool {
+        
+        if let user = UserDefaults.standard.string(forKey: "loggedInUserID"),
+           !user.isEmpty,
+           let username = UserDefaults.standard.string(forKey: "loggedInUsername"),
+           !username.isEmpty {
+            return true
+        }
+        return false
     }
 }
-
-//        let detailedVC = DetailedViewController()
-//
-//        detailedVC.author = tableData[indexPath.row].author
-//        detailedVC.content = tableData[indexPath.row].content
-//        detailedVC.postTitle = tableData[indexPath.row].title
-//        let currentDate = Date()
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-//        let dateString = dateFormatter.string(from: currentDate)
-//        detailedVC.date = dateString
-//
-//        navigationController?.pushViewController(detailedVC, animated: true)

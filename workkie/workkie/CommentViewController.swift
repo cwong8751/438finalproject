@@ -18,9 +18,12 @@ class CommentViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        commentText.layer.borderColor = UIColor.lightGray.cgColor
+        commentText.layer.borderWidth = 1.0
+        commentText.layer.cornerRadius = 4
     }
     
-    @IBOutlet weak var commentText: UITextField!
+    @IBOutlet weak var commentText: UITextView!
     
     let dbManager = MongoTest()
     
@@ -75,13 +78,3 @@ class CommentViewController: UIViewController {
     
 
 }
-
-/*
-// MARK: - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    // Get the new view controller using segue.destination.
-    // Pass the selected object to the new view controller.
-}
-*/

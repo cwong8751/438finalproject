@@ -26,7 +26,7 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
         cell.textLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         cell.textLabel?.numberOfLines = 0
         cell.textLabel?.lineBreakMode = .byWordWrapping
-
+        
         return cell
     }
     
@@ -38,40 +38,28 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
     var content: String!
     var date: String!
     var comments: [String]?
-
+    
     @IBOutlet weak var authorvc: UILabel!
     
     @IBOutlet weak var titlevc: UILabel!
     
     @IBOutlet weak var datevc: UILabel!
     
-    @IBOutlet weak var contentvc: UILabel!
+    @IBOutlet weak var contentvc: UITextView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if isLoggedIn() {
-        }
-        else{
-            // trigger login screen
-            if let loginVC = storyboard?.instantiateViewController(withIdentifier: "LoginViewController") {
-                present(loginVC, animated: true, completion: nil)
-            }
-        }
-        
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 44
-
-        // Do any additional setup after loading the view.
-        view.backgroundColor = UIColor.white
         
-        authorvc?.text = author
+        authorvc?.text = "By " + author
         titlevc?.text = postTitle
-        datevc?.text = date
+        datevc?.text = "Posted on " + date
         contentvc?.text = content
-        contentvc?.textAlignment = .left
-        contentvc?.numberOfLines = 0
-        contentvc?.lineBreakMode = .byWordWrapping
+        //        contentvc?.textAlignment = .left
+        //        contentvc?.numberOfLines = 0
+        //        contentvc?.lineBreakMode = .byWordWrapping
         
         setupTableView()
         setupRefreshControl()
@@ -106,15 +94,15 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
     }
     
     func fetchDataForTableView() {
-//        let theData = comments
-//        tableView.reloadData()
+        //        let theData = comments
+        //        tableView.reloadData()
         Task {
             do {
                 let uri = "mongodb+srv://chengli:Luncy1234567890@users.at6lb.mongodb.net/users?authSource=admin&appName=Users"
                 try await dbManager.connect(uri: uri)
-
+                
                 if let fetchedComments = try await dbManager.getAllComments(forPostId: id) {
-//                    comments = fetchedComments
+                    //                    comments = fetchedComments
                     DispatchQueue.main.async {
                         self.comments = fetchedComments
                         self.tableView.reloadData()
@@ -138,10 +126,14 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
         
         if let commentView = storyboard.instantiateViewController(withIdentifier: "commentVC") as? CommentViewController {
             commentView.postId = id
-            self.present(commentView, animated: true, completion: nil)
+            commentView.title = "New Comment"
+        
+            let navigationController = UINavigationController(rootViewController: commentView)
+            self.present(navigationController, animated: true, completion: nil)
         } else {
             print("Failed to cast to CommentViewController")
         }
+        
     }
     @IBOutlet weak var deleteButton: UIButton!
     
@@ -168,7 +160,7 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
                 do {
                     let uri = "mongodb+srv://chengli:Luncy1234567890@users.at6lb.mongodb.net/users?authSource=admin&appName=Users"
                     try await dbManager.connect(uri: uri)
-
+                    
                     if try await dbManager.deletePost(postId: id) {
                         print("Post deleted successfully!")
                     } else {

@@ -19,21 +19,18 @@ class SecondViewController: UIViewController {
     
     @IBOutlet weak var contentLabel: UILabel!
     
-    @IBOutlet weak var contentOpening: UITextField!
+    @IBOutlet weak var contentOpening: UITextView!
     
     let dbManager = MongoTest()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if isLoggedIn() {
-        }
-        else{
-            // trigger login screen
-            if let loginVC = storyboard?.instantiateViewController(withIdentifier: "LoginViewController") {
-                present(loginVC, animated: true, completion: nil)
-            }
-        }
+        // CITATION: https://stackoverflow.com/questions/2647164/bordered-uitextview
+        self.contentOpening.layer.cornerRadius = 4
+        self.contentOpening.layer.borderColor = UIColor.lightGray.cgColor
+        self.contentOpening.layer.borderWidth = 1.0
+        // END CITATION
     }
     
     func isLoggedIn() -> Bool {
