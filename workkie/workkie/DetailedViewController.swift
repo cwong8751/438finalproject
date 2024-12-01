@@ -67,18 +67,6 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
         updateButtonVisibility()
     }
     
-    func isLoggedIn() -> Bool {
-        
-        if let user = UserDefaults.standard.string(forKey: "loggedInUserID"),
-           !user.isEmpty,
-           let username = UserDefaults.standard.string(forKey: "loggedInUsername"),
-           !username.isEmpty {
-            
-            return true
-        }
-        return false
-    }
-    
     func setupTableView() {
         tableView.dataSource = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
@@ -123,15 +111,20 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
     
     @IBAction func commentPressed(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        
-        if let commentView = storyboard.instantiateViewController(withIdentifier: "commentVC") as? CommentViewController {
-            commentView.postId = id
-            commentView.title = "New Comment"
-        
-            let navigationController = UINavigationController(rootViewController: commentView)
-            self.present(navigationController, animated: true, completion: nil)
+        if isLoggedIn() {
+            if let commentView = storyboard.instantiateViewController(withIdentifier: "commentVC") as? CommentViewController {
+                commentView.postId = id
+                commentView.title = "New Comment"
+                
+                let navigationController = UINavigationController(rootViewController: commentView)
+                self.present(navigationController, animated: true, completion: nil)
+            } else {
+                print("Failed to cast to CommentViewController")
+            }
         } else {
-            print("Failed to cast to CommentViewController")
+            let alert = UIAlertController(title: "Login to continue", message: "Log in to write a post", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
         
     }
@@ -149,6 +142,17 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
             }
         }
         
+    }
+    
+    func isLoggedIn() -> Bool {
+        
+        if let user = UserDefaults.standard.string(forKey: "loggedInUserID"),
+           !user.isEmpty,
+           let username = UserDefaults.standard.string(forKey: "loggedInUsername"),
+           !username.isEmpty {
+            return true
+        }
+        return false
     }
     
     @IBAction func deletePressed(_ sender: Any) {
