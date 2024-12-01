@@ -23,6 +23,7 @@ class ConnectionDetailViewController: UIViewController {
     override func viewDidLoad() {
         profileImageView.image = UIImage(named: "profile_img")
         
+        // set up all values, nothing else to do
         if let user = user {
             usernameLabel.text = user.username
             emailLabel.text = user.email

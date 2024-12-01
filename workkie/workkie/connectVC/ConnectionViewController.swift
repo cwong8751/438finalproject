@@ -25,12 +25,12 @@ class ConnectionViewController: UIViewController, UITableViewDataSource, UITable
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Set up search bar
+        // search bar
         searchBar.delegate = self
         searchBar.placeholder = "Search connections"
         searchBar.showsCancelButton = true
         
-        // Set up table view
+        // set up table
         connectionTableView.dataSource = self
         connectionTableView.delegate = self
         connectionTableView.register(UINib(nibName: "ConnectionCell", bundle: nil), forCellReuseIdentifier: "ConnectionCell")
@@ -54,10 +54,6 @@ class ConnectionViewController: UIViewController, UITableViewDataSource, UITable
         cell.detailButton.addTarget(self, action: #selector(detailButtonPressed(_:)), for: .touchUpInside)
         cell.detailButton.tag = indexPath.row
         return cell
-    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("Selected Row: \(indexPath.row)")
     }
     
     // MARK: - Search Bar Delegate
@@ -140,6 +136,7 @@ class ConnectionViewController: UIViewController, UITableViewDataSource, UITable
                 let listUsers = try await dbManager.getUsers()
                 var userBeingSend: User? = nil
                 
+                // get details
                 if let listUsers = listUsers {
                     for user in listUsers {
                         if user.username == connections[selectedIndex].username {
@@ -148,6 +145,7 @@ class ConnectionViewController: UIViewController, UITableViewDataSource, UITable
                         }
                     }
                     
+                    // launch new screen
                     DispatchQueue.main.async {
                         let connectionDetailView = self.storyboard?.instantiateViewController(withIdentifier: "connectionDetailView") as! ConnectionDetailViewController
                         

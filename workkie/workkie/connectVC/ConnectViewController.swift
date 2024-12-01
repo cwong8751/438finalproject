@@ -24,8 +24,7 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
     var profiles: [User] = []
     var filteredProfiles: [User] = []
     
-    let mongoTest = MongoTest()  // Instance to handle MongoDB operations
-    let useRealData = true  // Toggle between real data and pseudo data
+    let mongoTest = MongoTest()
     var currentUser: ObjectId?
     var currentUsername: String?
     
@@ -57,12 +56,6 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         // always load real data now
         connectToMongoDB()
-        //        // Check whether to use real MongoDB data or pseudo data
-        //        if useRealData {
-        //            connectToMongoDB()
-        //        } else {
-        //            loadPseudoData()
-        //        }
         
         // Setup map view
         setupMapView()
@@ -102,8 +95,6 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
         // get user's latitude and longitude and update it to mongo
         
         if isLoggedIn() {
-            //            print("current user: ", currentUser)
-            //            print("current username is: ", currentUsername)
             print("user logged in, setting user coordinates")
             
             Task {
@@ -219,20 +210,6 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
             print("No users found in MongoDB.")
         }
     }
-    
-    //    func loadPseudoData() {
-    //        profiles = [
-    //            User(username: "Alice", password: "password1", latitude: 37.7749, longitude: -122.4194),
-    //            User(username: "Bob", password: "password2", latitude: 37.7753, longitude: -122.4200),
-    //            User(username: "Charlie", password: "password3", latitude: 34.0522, longitude: -118.2437),
-    //            User(username: "Diana", password: "password4", latitude: 51.5074, longitude: -0.1278),
-    //            User(username: "Eve", password: "password5", latitude: 48.8566, longitude: 2.3522)
-    //        ]
-    //
-    //        filteredProfiles = profiles
-    //        tableView.reloadData()
-    //        updateMapAnnotationsForAllUsers()  // update map
-    //    }
     
     // MARK: - UITableViewDataSource Methods
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -372,20 +349,20 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // Get the selected user
+        
         let selectedUser = filteredProfiles[indexPath.row]
         
-        // Ensure the user has a valid location (latitude and longitude)
+        // guard check
         if let latitude = selectedUser.latitude, let longitude = selectedUser.longitude {
             // check if user's location is 0,0, 0,0 is invalid location
             if latitude != 0.0 && longitude != 0.0 {
                 let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
                 
-                // Center the map on the selected user's location
+                // focus user region
                 let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 5000, longitudinalMeters: 5000)
                 mapView.setRegion(region, animated: true)
                 
-                // Remove old annotations and add a new one for the selected user
+                
                 mapView.removeAnnotations(mapView.annotations)
                 
                 let annotation = MKPointAnnotation()
@@ -406,22 +383,21 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
             present(alert, animated: true, completion: nil)
         }
         
-        // Deselect the row after handling the tap
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
             filteredProfiles = profiles
-            mapView.removeAnnotations(mapView.annotations)  // Clear map annotations
-            updateMapAnnotationsForAllUsers()  // Re-add all annotations
+            mapView.removeAnnotations(mapView.annotations)
+            updateMapAnnotationsForAllUsers()
         } else {
-            // Filter profiles based on search text
+            
             filteredProfiles = profiles.filter { user in
                 user.username.lowercased().contains(searchText.lowercased())
             }
             
-            // If there are filtered results, focus on the first one on the map
+            
             if let firstUser = filteredProfiles.first, let lat = firstUser.latitude, let lon = firstUser.longitude {
                 let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
                 
@@ -472,7 +448,8 @@ class ConnectViewController: UIViewController, UITableViewDelegate, UITableViewD
     func startFetchConnectionRequest() {
         // schedule a timer to fetch every 1 minute
         
-        Timer.scheduledTimer(withTimeInterval: 60.0, repeats: true) { timer in
+        //CITATION: https://www.hackingwithswift.com/articles/117/the-ultimate-guide-to-timer
+        Timer.scheduledTimer(withTimeInterval: 20.0, repeats: true) { timer in
             Task {
                 do {
                     

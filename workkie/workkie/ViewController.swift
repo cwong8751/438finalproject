@@ -27,11 +27,11 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         let post = tableData[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
         let id = post._id
-        cell.postAuthor.text = post.author
+        cell.postAuthor.text = "By " + post.author
         cell.postContent.text = post.content
         let currentDate = Date()
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HH:mm MM/dd/yyyy " // yyyy/MM/dd HH:mm:ss
+        dateFormatter.dateFormat = "MM/dd/yyyy " // yyyy/MM/dd HH:mm:ss
         let dateString = dateFormatter.string(from: currentDate)
         cell.postDate.text = dateString
         cell.postTitle.text = post.title
@@ -40,7 +40,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+        return 129
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -77,7 +77,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     func fetchDataForTableView() {
         
         //print("up here")
-        let url = "mongodb+srv://chengli:Luncy1234567890@users.at6lb.mongodb.net/users?authSource=admin&appName=Users"
+        let url = "mongodb+srv://chengli:Luncy1234567890@users.at6lb.mongodb.net/users?authSource=admin&appName=Users&readPreference=primary&readConcernLevel=majority"
         
         Task {
             do {

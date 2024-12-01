@@ -13,10 +13,11 @@ import BSON
 class CommentViewController: UIViewController {
     
     var postId: ObjectId!
-
+    weak var delegate: CommentViewControllerDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
         commentText.layer.borderColor = UIColor.lightGray.cgColor
         commentText.layer.borderWidth = 1.0
@@ -30,37 +31,35 @@ class CommentViewController: UIViewController {
     @IBAction func postComment(_ sender: Any) {
         
         Task {
-            
             let defaults = UserDefaults.standard
-            if isLoggedIn() {
-                
-            } else {
-                return
-                dismiss(animated: true, completion: nil)
-            }
             let author = defaults.object(forKey: "loggedInUsername") as! String
             let comment = commentText.text
             
-            
             do {
-                // Ensure the connection
-                let uri = "mongodb+srv://chengli:Luncy1234567890@users.at6lb.mongodb.net/users?authSource=admin&appName=Users"
+                
+                let uri = "mongodb+srv://chengli:Luncy1234567890@users.at6lb.mongodb.net/users?authSource=admin&appName=Users&readPreference=primary&readConcernLevel=majority"
                 try await dbManager.connect(uri: uri)
                 
-                // Insert the new post
+                
                 if try await dbManager.insertComment(postId: postId, author: author, content: comment ?? "N/A") {
-                    print("Post added successfully!")
+                    print("comment added successfully!")
+                    DispatchQueue.main.async {
+                        self.dismiss(animated: true) {
+                            self.delegate?.commentAdded(commentString: author + ": " + (comment ?? ""))
+                        }
+                    }
                 } else {
-                    print("Failed to add post.")
+                    print("Failed to add comment.")
+                    DispatchQueue.main.async {
+                        let alert = UIAlertController(title: "Failed to add comment", message: "Something went wrong, please try again", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: .default))
+                        self.present(alert, animated: true)
+                    }
                 }
             } catch {
                 print("Error: \(error)")
             }
-
-            dismiss(animated: true, completion: nil)
-            
         }
-        
     }
     
     func isLoggedIn() -> Bool {
@@ -76,5 +75,9 @@ class CommentViewController: UIViewController {
         return false
     }
     
-
+    protocol CommentViewControllerDelegate: AnyObject {
+        func commentAdded(commentString: String)
+    }
 }
+
+

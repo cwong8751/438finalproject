@@ -227,7 +227,7 @@ class MongoTest {
         }
     }
     
-    func getAllComments(forPostId postId: ObjectId) async throws -> [String]? {
+    func getAllComments(postId: ObjectId) async throws -> [String]? {
         guard let database = database else {
             print("Database is not connected.")
             return nil

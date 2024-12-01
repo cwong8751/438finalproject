@@ -10,13 +10,14 @@ import MongoKitten
 import MongoCore
 import BSON
 
-class DetailedViewController: UIViewController, UITableViewDataSource {
-    
+class DetailedViewController: UIViewController, UITableViewDataSource, CommentViewController.CommentViewControllerDelegate {
+
     @IBOutlet weak var tableView: UITableView!
     
     let refreshControl = UIRefreshControl()
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        updatePlaceholder()
         return comments?.count ?? 0
     }
     
@@ -57,14 +58,15 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
         titlevc?.text = postTitle
         datevc?.text = "Posted on " + date
         contentvc?.text = content
-        //        contentvc?.textAlignment = .left
-        //        contentvc?.numberOfLines = 0
-        //        contentvc?.lineBreakMode = .byWordWrapping
         
         setupTableView()
         setupRefreshControl()
         fetchDataForTableView()
         updateButtonVisibility()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        fetchDataForTableView()
     }
     
     func setupTableView() {
@@ -82,18 +84,17 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
     }
     
     func fetchDataForTableView() {
-        //        let theData = comments
-        //        tableView.reloadData()
         Task {
             do {
-                let uri = "mongodb+srv://chengli:Luncy1234567890@users.at6lb.mongodb.net/users?authSource=admin&appName=Users"
+                let uri = "mongodb+srv://chengli:Luncy1234567890@users.at6lb.mongodb.net/users?authSource=admin&appName=Users&readPreference=primary&readConcernLevel=majority"
+
                 try await dbManager.connect(uri: uri)
-                
-                if let fetchedComments = try await dbManager.getAllComments(forPostId: id) {
-                    //                    comments = fetchedComments
+                if let fetchedComments = try await dbManager.getAllComments(postId: id) {
+                    
                     DispatchQueue.main.async {
                         self.comments = fetchedComments
                         self.tableView.reloadData()
+                        self.updatePlaceholder()
                         self.refreshControl.endRefreshing()
                     }
                 }
@@ -115,6 +116,7 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
             if let commentView = storyboard.instantiateViewController(withIdentifier: "commentVC") as? CommentViewController {
                 commentView.postId = id
                 commentView.title = "New Comment"
+                commentView.delegate = self
                 
                 let navigationController = UINavigationController(rootViewController: commentView)
                 self.present(navigationController, animated: true, completion: nil)
@@ -122,7 +124,7 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
                 print("Failed to cast to CommentViewController")
             }
         } else {
-            let alert = UIAlertController(title: "Login to continue", message: "Log in to write a post", preferredStyle: .alert)
+            let alert = UIAlertController(title: "Login to continue", message: "Log in to write a comment", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
@@ -176,5 +178,37 @@ class DetailedViewController: UIViewController, UITableViewDataSource {
                 }
             }
         }
+    }
+    
+    // function to add a "no comments"
+    private let emptyLabel: UILabel = {
+        let label = UILabel()
+        label.text = "No comments"
+        label.textColor = .gray
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    func updatePlaceholder() {
+        if let cmts = comments {
+            if cmts.count <= 0 {
+                tableView.backgroundView = emptyLabel
+            } else {
+                tableView.backgroundView = nil
+            }
+        }
+        else{
+            tableView.backgroundView = emptyLabel
+        }
+    }
+    
+    // delegate method
+    func commentAdded(commentString: String) {
+        // since mongo has some read delay time right after write, we use delegate to add a local copy
+        comments?.append(commentString)
+        tableView.reloadData()
     }
 }

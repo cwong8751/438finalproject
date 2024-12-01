@@ -24,7 +24,7 @@ class ProfileCell: UITableViewCell {
         connectButton?.translatesAutoresizingMaskIntoConstraints = false
 
         if let profileImageView = profileImageView {
-            profileImageView.image = UIImage(named: "profile_img")
+            profileImageView.image = UIImage(named: "profile_img") // set up default avatar
             
             NSLayoutConstraint.activate([
                 profileImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
