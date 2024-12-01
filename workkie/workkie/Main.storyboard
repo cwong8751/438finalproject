@@ -73,7 +73,7 @@
                                 </prototypes>
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wgx-Ex-b5Y">
-                                <rect key="frame" x="319" y="103" width="58" height="38"/>
+                                <rect key="frame" x="16" y="103" width="361" height="38"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Post"/>
@@ -125,23 +125,23 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4jA-rb-ZXQ">
-                                <rect key="frame" x="167.66666666666666" y="294" width="58" height="35"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Post"/>
-                                <connections>
-                                    <action selector="postButton:" destination="hEU-r0-1GX" eventType="touchUpInside" id="ouA-Nz-gDq"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Content" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fW1-Zd-NeJ">
                                 <rect key="frame" x="16" y="221" width="361" height="24"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4jA-rb-ZXQ">
+                                <rect key="frame" x="167" y="294" width="58" height="35"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Post"/>
+                                <connections>
+                                    <action selector="postButton:" destination="hEU-r0-1GX" eventType="touchUpInside" id="ouA-Nz-gDq"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="yYm-F7-fal"/>
-                        <color key="backgroundColor" red="0.68806345998470664" green="0.95080593249864376" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="l90-yi-hcI" firstAttribute="trailing" secondItem="TIQ-Gh-smS" secondAttribute="trailingMargin" id="4Le-qc-8b8"/>
                             <constraint firstItem="Q4p-lN-dHj" firstAttribute="top" secondItem="LZg-8n-guR" secondAttribute="bottom" constant="8" id="6VI-lP-kai"/>
@@ -234,7 +234,7 @@
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="C6j-E5-Apa"/>
-                        <color key="backgroundColor" red="0.75471339082142586" green="0.99555219373208215" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </view>
                     <connections>
                         <outlet property="authorvc" destination="wgC-cM-VUD" id="4r7-LN-qgI"/>
@@ -282,7 +282,7 @@
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vyy-zQ-mYP"/>
-                        <color key="backgroundColor" red="0.75471339079999999" green="0.99555219370000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </view>
                     <connections>
                         <outlet property="commentText" destination="rYh-2c-sSr" id="sKS-EK-hBp"/>
