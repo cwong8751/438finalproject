@@ -40,7 +40,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+        return 75
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -59,7 +59,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "HH:mm MM/dd/yyyy"
         detailedVC.date = dateFormatter.string(from: post.date ?? Date())
-        detailedVC.comments = post.comments 
+        detailedVC.comments = post.comments
         
         // set title
         detailedVC.title = post.title
