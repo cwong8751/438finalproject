@@ -59,7 +59,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "HH:mm MM/dd/yyyy"
         detailedVC.date = dateFormatter.string(from: post.date ?? Date())
-        detailedVC.comments = post.comments
+        detailedVC.comments = post.comments 
         
         // set title
         detailedVC.title = post.title
