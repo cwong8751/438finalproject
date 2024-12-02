@@ -62,6 +62,7 @@ class DetailedViewController: UIViewController, UITableViewDataSource, CommentVi
         setupTableView()
         setupRefreshControl()
         fetchDataForTableView()
+//        Next line is from ChatGPT
         updateButtonVisibility()
     }
     
@@ -73,12 +74,12 @@ class DetailedViewController: UIViewController, UITableViewDataSource, CommentVi
         tableView.dataSource = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
     }
-    
+//    Next 4 lines are from ChatGPT
     func setupRefreshControl() {
         refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         tableView.refreshControl = refreshControl
     }
-    
+//    Next 3 lines are from ChatGPT
     @objc func refreshData() {
         fetchDataForTableView()
     }
@@ -90,7 +91,7 @@ class DetailedViewController: UIViewController, UITableViewDataSource, CommentVi
 
                 try await dbManager.connect(uri: uri)
                 if let fetchedComments = try await dbManager.getAllComments(postId: id) {
-                    
+//                    Next 5 lines are from ChatGPT
                     DispatchQueue.main.async {
                         self.comments = fetchedComments
                         self.tableView.reloadData()
@@ -99,11 +100,13 @@ class DetailedViewController: UIViewController, UITableViewDataSource, CommentVi
                     }
                 }
             } catch {
+//                Next 3 lines are from ChatGPT
                 DispatchQueue.main.async {
                     print("Failed to fetch comments: \(error)")
                     self.refreshControl.endRefreshing()
                 }
             }
+//            Next 2 lines are from ChatGPT
             DispatchQueue.main.async {
                 self.refreshControl.endRefreshing()
             }
@@ -133,10 +136,12 @@ class DetailedViewController: UIViewController, UITableViewDataSource, CommentVi
     @IBOutlet weak var deleteButton: UIButton!
     
     func updateButtonVisibility() {
+//        Next line is from ChatGPT
         deleteButton.isHidden = true
         if isLoggedIn() {
             let defaults = UserDefaults.standard
             let currentUser = defaults.object(forKey: "loggedInUsername") as! String
+//            Next 4 lines are from ChatGPT
             if currentUser == author {
                 deleteButton.isHidden = false
             } else {

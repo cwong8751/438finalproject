@@ -83,6 +83,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             do {
                 try await dbManager.connect(uri: url)
                 let listOfPosts = try await dbManager.getAllPosts() ?? []
+//                Next 4 lines are from ChatGPT
                 DispatchQueue.main.async {
                     self.tableData = listOfPosts.reversed()
                     self.tableView.reloadData()
@@ -90,6 +91,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 }
             } catch {
                 print("Error fetching data: \(error)")
+//                Next 2 lines are from ChatGPT
                 DispatchQueue.main.async {
                     self.refreshControl.endRefreshing()
                 }
@@ -103,6 +105,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         tableView.dataSource = self
         tableView.delegate = self
         fetchDataForTableView()
+//        Next line is from ChatGPT
         configureRefreshControl()
         // Do any additional setup after loading the view.
     }

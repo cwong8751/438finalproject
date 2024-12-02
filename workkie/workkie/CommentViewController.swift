@@ -43,12 +43,14 @@ class CommentViewController: UIViewController {
                 
                 if try await dbManager.insertComment(postId: postId, author: author, content: comment ?? "N/A") {
                     print("comment added successfully!")
+//                    Next 2 lines are from ChatGPT
                     DispatchQueue.main.async {
                         self.dismiss(animated: true) {
                             self.delegate?.commentAdded(commentString: author + ": " + (comment ?? ""))
                         }
                     }
                 } else {
+//                    Next 2 lines are from ChatGPT
                     print("Failed to add comment.")
                     DispatchQueue.main.async {
                         let alert = UIAlertController(title: "Failed to add comment", message: "Something went wrong, please try again", preferredStyle: .alert)
